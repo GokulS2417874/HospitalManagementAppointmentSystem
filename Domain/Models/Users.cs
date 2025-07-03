@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-   
     public abstract class Users : Enum
     {
         [Key]
@@ -32,8 +31,6 @@ namespace Domain.Models
         public Relationship EmergencyContactRelationship { get; set; }
         [Required]
         public string? EmergencyContactPhoneNumber { get; set; }
-
-
     }
 }
 

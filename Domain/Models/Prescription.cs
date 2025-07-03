@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Domain.Models.Enum;
 
 namespace Domain.Models
 {
-    public class Prescription : Medicine
+    public class Prescription
     {
         [Key]
         public int PrescriptionId { get; set; }
         [Required]
-        public long AppointmentId { get; set; }
-        [Required]
-        public DateTime CreatedDate { get; set; }
-        public string? Notes { get; set; }
+        public string MedicineName { get; set; }
+        public ScheduleTime MedicineScheduledTime { get; set; }
+        public Appointment Appointment{ get; set; }
     }
 }

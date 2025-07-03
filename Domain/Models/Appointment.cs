@@ -12,16 +12,17 @@ namespace Domain.Models
         public int AppointmentId { get; set; }
         public DateTime AppointmentDateTime { get; set; }= DateTime.Now;
         public AppointmentStatus AppointmentStatus { get; set; }
-        public AppointmentType AppointmentBookedBy { get; set; }
-        //public string? PrescriptionFromDoctor { get; set; }
-        //public string? PatientMedicalHistroy { get; set; }
         public bool IsFollowUpRequired { get; set; }
-        //public string? Diagnosis { get; set; }
         public DateTime? FollowUpDate { get; set; }
+        public string FilePath { get; set; }
 
         //One to Many Realationship (Child class)
-        public Patient Patient { get; set; }    
+        public Patient Patient { get; set; }
+
+        //One to Many Realationship (Child class)
         public Doctor Doctor {  get; set; }
-        public MedicalHistory MedicalHistory { get; set; }
+        public Prescription Prescription { get; set; }
+        public Payment Payment{ get; set; }
+        public IEnumerable<Notification> Notifications { get; set; }
     }
 }

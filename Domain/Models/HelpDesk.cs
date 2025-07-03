@@ -12,8 +12,8 @@ namespace Domain.Models
         {
             Role = UserRole.HelpDesk;
         }
-        public int MaxDailyBookings { get; set; }
         public Status Active_Status { get; set; }
+        public IEnumerable<Patient> Patients { get; set; }  
     }
 
 }

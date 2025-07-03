@@ -13,8 +13,7 @@ namespace Domain.Models
         public NotificationType Title { get; set; }
         public string? Message { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public bool IsRead { get; set; } = false;
-
+        public Appointment Appointment{ get; set; }
     }
 
 }

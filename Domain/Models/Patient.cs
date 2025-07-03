@@ -17,7 +17,9 @@ namespace Domain.Models
         public DateTime DateOfBrith { get; set; }
         [Required]
         public PatientGender Gender { get; set; }
-        public string MedicalHistory { get; set; }
+        public AppointmentType AppointmentBookedBy { get; set; }
+        public HelpDesk HelpDesk { get; set; }  
+
         //One to Many Realationship (Parent class)
         public IEnumerable<Appointment> Appointment { get; set; }  
     }
