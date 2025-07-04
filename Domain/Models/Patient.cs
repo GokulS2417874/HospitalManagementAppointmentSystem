@@ -18,9 +18,10 @@ namespace Domain.Models
         [Required]
         public PatientGender Gender { get; set; }
         public AppointmentType AppointmentBookedBy { get; set; }
-        public HelpDesk HelpDesk { get; set; }  
+        public HelpDesk HelpDesk { get; set; }
+        public int HelpDeskId { get; set; }
 
-        //One to Many Realationship (Parent class)
+        //One to Many Realationship (Parent class) 
         public IEnumerable<Appointment> Appointment { get; set; }  
     }
 }
