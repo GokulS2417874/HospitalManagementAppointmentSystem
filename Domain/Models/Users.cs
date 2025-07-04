@@ -17,7 +17,7 @@ namespace Domain.Models
         [Required]
         [EmailAddress]
         [MaxLength(60)]
-        public string EmailId { get; set; }
+        public string Email { get; set; }
         [Required]
         [Phone]
         [MaxLength(10)]

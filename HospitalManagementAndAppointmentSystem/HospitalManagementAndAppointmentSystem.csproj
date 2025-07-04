@@ -24,6 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Folder Include="Service\" />
 		<Folder Include="DTOs\" />
 	</ItemGroup>
 
