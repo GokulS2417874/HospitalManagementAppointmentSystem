@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Models
 {
-    public class Enum
+    public abstract class Enum
     {
         public enum Status
         {
