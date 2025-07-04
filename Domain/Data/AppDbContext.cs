@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Data
 {
-    public class AppDbContext
+    public class AppDbContext 
     {
 
     }
