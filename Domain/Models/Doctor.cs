@@ -17,6 +17,6 @@ namespace Domain.Models
         public int ExperienceYears { get; set; }
         public Status Active_Status { get; set; }
         public int Consultant_fees { get; set; } = 500;
-        public IEnumerable<Appointment> Appointments { get; set; }
+        public IEnumerable<Appointment> Appointment { get; set; }
     }
 }

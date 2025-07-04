@@ -16,5 +16,6 @@ namespace Domain.Models
         public string MedicineName { get; set; }
         public ScheduleTime MedicineScheduledTime { get; set; }
         public Appointment Appointment{ get; set; }
+        public Appointment AppointmentId{ get; set; }
     }
 }

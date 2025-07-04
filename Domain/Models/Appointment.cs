@@ -17,9 +17,12 @@ namespace Domain.Models
         public string FilePath { get; set; }
 
         //One to Many Realationship (Child class)
+
+        public int PatientId { get; set; }
         public Patient Patient { get; set; }
 
         //One to Many Realationship (Child class)
+        public int DoctorId { get; set; }
         public Doctor Doctor {  get; set; }
         public Prescription Prescription { get; set; }
         public Payment Payment{ get; set; }

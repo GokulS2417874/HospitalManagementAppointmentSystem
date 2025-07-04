@@ -14,6 +14,7 @@ namespace Domain.Models
         public string? Message { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public Appointment Appointment{ get; set; }
+        public Appointment AppointmentId { get; set; }
     }
 
 }
