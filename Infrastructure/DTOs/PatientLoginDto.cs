@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HospitalManagementAndAppointmentSystem.DTOs
+namespace Infrastructure.DTOs
 {
-    public class HelpDeskLoginDto
+    public class PatientLoginDto
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email {  get; set; }
         [Required]
         public string Password { get; set; }
     }

@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 using static Domain.Models.Enum;
 
 
-namespace HospitalManagementAndAppointmentSystem.DTOs
-{
+namespace Infrastructure.DTOs { 
     public class PatientRegistrationDto  
     {
         [Required]
