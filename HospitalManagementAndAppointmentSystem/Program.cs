@@ -1,5 +1,8 @@
 
 using Domain.Data;
+using Infrastructure.Interface;
+using Infrastructure.Repositorty;
+using JWT.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace HospitalManagementAndAppointmentSystem
@@ -10,10 +13,11 @@ namespace HospitalManagementAndAppointmentSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddDbContext<AppDbContext>(options =>
-           // options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("HospitalManagementAndAppointmentSystem")));
 
-
+            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+            builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
             // Add services to the container.
 
             builder.Services.AddControllers();

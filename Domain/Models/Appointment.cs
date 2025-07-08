@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,12 @@ namespace Domain.Models
         public int DoctorId { get; set; }
         public Doctor Doctor {  get; set; }
         public Prescription Prescription { get; set; }
+
+        public int? PaymentId { get; set; }
         public Payment Payment{ get; set; }
-        public IEnumerable<Notification> Notifications { get; set; }
+
+        [NotMapped]
+        public ICollection<Notification> Notifications { get; set; }
+
     }
 }

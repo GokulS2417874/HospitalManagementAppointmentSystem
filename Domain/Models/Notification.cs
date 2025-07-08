@@ -13,8 +13,9 @@ namespace Domain.Models
         public NotificationType Title { get; set; }
         public string? Message { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public Appointment Appointment{ get; set; }
-        public Appointment AppointmentId { get; set; }
+        public int AppointmentId { get; set; }
+        public Appointment Appointment { get; set; }
+
     }
 
 }
