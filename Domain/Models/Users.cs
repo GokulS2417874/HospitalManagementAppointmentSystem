@@ -4,32 +4,27 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
-    public abstract class Users : Enum
+    public  class Users : Enum
     {
         [Key]
         public int UserId { get; set; }
+      
+        public string? UserName { get; set; }
         [Required]
-        [MaxLength(50)]
-        public string UserName { get; set; }
-        [Required]
-        [StringLength(20, MinimumLength = 8)]
-        public string Password { get; set; }
+        [MaxLength(100)]
+        public string PasswordHash { get; set; }
+        public string? ResetToken { get; set; } = null;
+        public DateTime? ResetTokenExpiry { get; set; } = null;
         [Required]
         [EmailAddress]
         [MaxLength(60)]
         public string Email { get; set; }
-        [Required]
-        [Phone]
-        [MaxLength(10)]
-        public string PhoneNumber { get; set; }
-        public UserRole Role { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+         public string? PhoneNumber { get; set; }
+        public UserRole? Role { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
         public DateTime? DeletedAt { get; set; } = DateTime.Now;
-        [Required]
-        public string? EmergencyContactName { get; set; }
-        [Required]
-        public Relationship EmergencyContactRelationship { get; set; }
-        [Required]
+        public string? EmergencyContactName { get; set; }  = null;
+        public Relationship? EmergencyContactRelationship { get; set; }
         public string? EmergencyContactPhoneNumber { get; set; }
     }
 }

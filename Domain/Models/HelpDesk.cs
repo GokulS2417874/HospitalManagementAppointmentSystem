@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +13,10 @@ namespace Domain.Models
         {
             Role = UserRole.HelpDesk;
         }
-        public Status Active_Status { get; set; }
-        public IEnumerable<Patient> Patients { get; set; }  
+        public string? Languages { get; set; }
+  
+        public string? Qualification { get; set; }
+        public Status? Active_Status { get; set; }
     }
 
 }

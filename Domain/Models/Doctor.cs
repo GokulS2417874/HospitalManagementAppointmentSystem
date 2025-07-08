@@ -12,11 +12,10 @@ namespace Domain.Models
         {
             Role = UserRole.Doctor;
         }
-        public string Specialization { get; set; }
-        public string Qualification { get; set; }
-        public int ExperienceYears { get; set; }
-        public Status Active_Status { get; set; }
-        public int Consultant_fees { get; set; } = 500;
-        public IEnumerable<Appointment> Appointment { get; set; }
+        public string? Specialization { get; set; }
+        public string? Qualification { get; set; }
+        public int? ExperienceYears { get; set; }
+        public Status? Active_Status { get; set; }
+        public int? Consultant_fees { get; set; } = 500;
     }
 }

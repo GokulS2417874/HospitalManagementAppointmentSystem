@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,8 @@ namespace Domain.Models
         public enum PatientGender
         {
             Female,
-            Male
+            Male,
+            Others
         }
         public enum Relationship
         {
