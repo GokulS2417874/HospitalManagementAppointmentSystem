@@ -1,15 +1,20 @@
 ﻿using Domain.Data;
 using Domain.Models;
+using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
+using System.Web.Mvc;
 
-namespace Infrastructure.Repositorty
+namespace Infrastructure.Repository
 {
     public class AuthRepository : IAuthRepository
     {
@@ -32,6 +37,20 @@ namespace Infrastructure.Repositorty
         public Task SaveAsync()
         {
             return _context.SaveChangesAsync();
+        }
+        public async Task<string?> FindPassword(string Mail)
+        {
+            var LoginPassword = _context.Users.Where(q => q.Email.Equals(Mail))
+               .Select(q => q.PasswordHash)
+               .FirstOrDefault();
+            return LoginPassword;
+        }
+        public async Task<Users?> FindByResetTokenAsync(string token)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.ResetToken == token);
+            if (user != null) return user;
+            return null;
+
         }
     }
 }
