@@ -12,5 +12,7 @@ namespace Infrastructure.Interface
         Task AddUserAsync(Users User);
         Task<Users?> FindByEmailAsync(string email);
         Task SaveAsync();
+        Task<string?> FindPassword(string Mail);
+        Task<Users?> FindByResetTokenAsync(string token);
     }
 }

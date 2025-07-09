@@ -8,9 +8,10 @@ namespace Infrastructure.Interface
 {
     public interface IPasswordHasher
     {
-        string Hash(string palin);
+        string Hash(string plainn);
 
-        bool Verify(string palin, string hash);
+        public bool Verify(string InputPassword, string HashPassword);
+        
 
     }
 }

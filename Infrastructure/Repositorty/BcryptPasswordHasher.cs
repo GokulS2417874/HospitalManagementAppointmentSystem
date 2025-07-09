@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Interface;
 
-namespace JWT.Repository
+namespace Infrastructure.Repository
 {
     public class BcryptPasswordHasher : IPasswordHasher
     {
@@ -9,9 +9,11 @@ namespace JWT.Repository
             return BCrypt.Net.BCrypt.HashPassword(p);
         }
 
-        public bool Verify(string p, string h)
+        public bool Verify(string inputPassword,string hashedPassword)
         {
-            return BCrypt.Net.BCrypt.Verify(p, h);
+            return BCrypt.Net.BCrypt.Verify(inputPassword, hashedPassword);
         }
+
+        
     }
 }
