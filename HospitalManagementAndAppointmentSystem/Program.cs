@@ -27,6 +27,9 @@ namespace HospitalManagementAndAppointmentSystem
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             builder.Services.AddScoped<TokenGeneration>();
             builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+
+
 
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
