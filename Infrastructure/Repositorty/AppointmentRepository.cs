@@ -13,8 +13,8 @@ namespace Infrastructure.Repositorty
         public AppointmentRepository(AppDbContext context)
         {
             _context = context;
-        }   
-    public async Task<List<SlotWithDoctorDto>> GenerateDoctorSlots(specialization Specialization, ShiftTime Shift)
+        }
+        public async Task<List<SlotWithDoctorDto>> GenerateDoctorSlots(specialization Specialization, ShiftTime Shift)
         {
             var Today = DateOnly.FromDateTime(DateTime.Today);
             var SlotDuration = TimeSpan.FromMinutes(30);
@@ -66,11 +66,22 @@ namespace Infrastructure.Repositorty
         }
         public async Task<Appointment> BookAppointment(AppointmentDto dto, specialization specialization, string email)
         {
+            byte[]? filebytes = null;
+            if (dto.FilePath != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await dto.FilePath.CopyToAsync(memoryStream);
+                    filebytes = memoryStream.ToArray();
+                }
+
+            }
+
             var patientDetails = await _context.Users
                 .FirstOrDefaultAsync(x => x.Email == email && x.Role == UserRole.Patient);
 
             if (patientDetails == null)
-                return null; 
+                return null;
 
             if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
                 return null;
@@ -85,7 +96,10 @@ namespace Infrastructure.Repositorty
                 AppointmentDate = DateOnly.FromDateTime(DateTime.Today),
                 AppointmentStartTime = dto.AppointmentStartTime,
                 AppointmentEndTime = dto.AppointmentEndTime,
-                AppointmentStatus = dto.Submit ? AppointmentStatus.Scheduled : AppointmentStatus.InProgress
+                AppointmentStatus = dto.Submit ? AppointmentStatus.Scheduled : AppointmentStatus.InProgress,
+                FilePath = filebytes,
+                FileName = dto.FilePath?.FileName,
+                MimeType = dto.FilePath?.ContentType,
             };
 
             _context.Appointments.Add(appointment);
@@ -95,7 +109,7 @@ namespace Infrastructure.Repositorty
         }
         public async Task<Appointment> RetrieveAppointmentDetails(string email)
         {
-            
+
 
             var appointmentDetails = await _context.Users
                 .Join(_context.Appointments,
@@ -104,17 +118,82 @@ namespace Infrastructure.Repositorty
                       (u, a) => new { User = u, Appointment = a })
                 .Where(q => q.User.Email == email &&
                             q.User.Role == UserRole.Patient &&
-                            (q.Appointment.AppointmentStatus == AppointmentStatus.Scheduled|| q.Appointment.AppointmentStatus == AppointmentStatus.Rescheduled))
+                            (q.Appointment.AppointmentStatus == AppointmentStatus.Scheduled || q.Appointment.AppointmentStatus == AppointmentStatus.Rescheduled))
                 .Select(q => q.Appointment)
                 .FirstOrDefaultAsync();
             return appointmentDetails;
 
-            
+
         }
+
+        public async Task<(byte[] FilePath, string MimeType, string FileName)?> GetPatientMedicalHistoryAsync(int patientId)
+        {
+            var appointment = await _context.Appointments
+            .Where(a => a.PatientId == patientId).
+            OrderByDescending(a=>a.AppointmentDate)
+            .Select(a => new
+            {
+                a.FilePath,
+                a.MimeType,
+                a.FileName
+            })
+            .SingleOrDefaultAsync();
+
+            if (appointment == null || appointment.FilePath == null)
+                return null;
+
+            return (appointment.FilePath, appointment.MimeType ?? "application/pdf", appointment.FileName ?? "MedicalHistory.pdf");
+
+        }
+
+        public async Task<List<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId)
+        {
+            return await _context.Appointments
+            .Where(a => a.DoctorId == doctorId)
+            .ToListAsync();
+        }
+
+        public async Task<List<Appointment>> GetAppointmentsByPatientIdAsync(int PatientId)
+        {
+            return await _context.Appointments
+            .Where(a => a.PatientId ==  PatientId)
+            .ToListAsync();
+        }
+
+        public async Task<List<Appointment>> GetTodayAppointmentsForDoctorAsync(int doctorId)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            return await _context.Appointments
+                .Where(a => a.DoctorId == doctorId && a.AppointmentDate == today)
+                .ToListAsync();
+        }
+
+
+        //public async Task<(byte[] FilePath, string MimeType, string FileName)?> GetMedicalHistoryAsync(string email)
+        //{
+        //    var appointment = await _context.Appointments
+        //        .Join(_context.Users,
+        //         appointment => appointment.PatientId,
+        //         user => user.UserId,
+        //         (appointment, user) => new { appointment, user })
+        //        .Where(j => j.user.Email == email)
+        //        .Select(j => new
+        //        {
+        //            j.appointment.FilePath,
+        //            j.appointment.MimeType,
+        //            j.appointment.FileName
+        //        }).SingleOrDefaultAsync();
+
+        //    if (appointment == null || appointment.FilePath == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    return (appointment.FilePath, appointment.MimeType ?? "MedicalHistory/pdf", appointment.FileName ?? "MedicalHistory.pdf");
 
     }
 }
-
 
 
 

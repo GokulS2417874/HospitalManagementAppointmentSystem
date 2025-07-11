@@ -1,55 +1,66 @@
-﻿using Infrastructure.Interface;
+﻿using Domain.Models;
+using Infrastructure.Interface;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MimeKit;
+using System.Net;
 using System.Net.Mail;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
-
 
 namespace Infrastructure.Repository
 {
     public class EmailSender : IEmailSender
     {
         private readonly IConfiguration _config;
+        private readonly EmailSettings _settings;
 
-        public EmailSender(IConfiguration config)
+        public EmailSender(IConfiguration config, IOptions<EmailSettings> settings)
         {
             _config = config;
+            _settings = settings.Value;
         }
 
-        private class SmtpSettings
+        public async Task SendResetLinkAsync(string toEmail, string link)
         {
-            public string Host { get; set; }
-            public int Port { get; set; }
-            public string User {  get; set; }
-            public string Password { get; set; }
-            public string FromEmail { get; set; }   
-            public string FromName { get; set; }
-        }
-
-        public async Task SendResetLinkAsync(string toEmail, string Link)
-        {
-            var settings = _config.GetSection("smtp").Get<SmtpSettings>();
-
             var message = new MimeMessage
             {
                 Subject = "Password Reset",
                 Body = new TextPart("plain")
                 {
-                    Text = $"Click the link to reset your Password ;{Link}"
+                    Text = $"Click the link to reset your password: {link}"
                 }
             };
 
-            message.From.Add(new MailboxAddress(settings.FromName, settings.FromEmail));
+            message.From.Add(new MailboxAddress(_settings.SenderName, _settings.SenderEmail));
             message.To.Add(MailboxAddress.Parse(toEmail));
 
-
             using var client = new SmtpClient();
-            await client.ConnectAsync(settings.Host, settings.Port, SecureSocketOptions.StartTls);
-            await client.AuthenticateAsync(settings.User, settings.Password);
+            await client.ConnectAsync(_settings.SmtpServer, _settings.SmtpPort, SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(_settings.SenderEmail, _settings.SenderPassword);
             await client.SendAsync(message);
             await client.DisconnectAsync(true);
+        }
 
+        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        {
+            var message = new MailMessage
+            {
+                From = new MailAddress(_settings.SenderEmail, _settings.SenderName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = true
+            };
+
+            message.To.Add(toEmail);
+
+            using var smtp = new System.Net.Mail.SmtpClient(_settings.SmtpServer, _settings.SmtpPort)
+            {
+                Credentials = new NetworkCredential(_settings.SenderEmail, _settings.SenderPassword),
+                EnableSsl = true
+            };
+
+            await smtp.SendMailAsync(message);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Domain.Models;
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
+using Infrastructure.Repositorty;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -104,8 +105,81 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok();
         }
 
+
+
+        [HttpGet("GetAppointmentsByDoctorId")]
+        public async Task<IActionResult> ViewAppointmentsForDoctor([FromQuery] int docId)
+        {
+            var appointments = await _repo.GetAppointmentsByDoctorIdAsync(docId);
+
+            if (appointments == null || !appointments.Any())
+            {
+                return NotFound("No appointments found for this doctor.");
+            }
+
+            return Ok(appointments);
+        }
+
+        [HttpGet("GetAppointmentsByPatientId")]
+        public async Task<IActionResult> ViewAppointmentsForPatient([FromQuery] int PatId)
+        {
+            var appointments = await _repo.GetAppointmentsByPatientIdAsync(PatId);
+
+            if (appointments == null || !appointments.Any())
+            {
+                return NotFound("No appointments found for this doctor.");
+            }
+
+            return Ok(appointments);
+        }
+
+
+        [HttpGet("GetPatientMedicalHistoriesById")]
+        public async Task<IActionResult> GetMedicalHistory(int id)
+        {
+            var result = await _repo.GetPatientMedicalHistoryAsync(id);
+
+            if (result == null)
+                return NotFound("No Medical History");
+
+            return File(
+            fileContents: result.Value.FilePath,
+            contentType: result.Value.MimeType,
+            fileDownloadName: result.Value.FileName
+            );
+        }
+
+        [HttpGet("Today-AppointmentsForDoctor")]
+        public async Task<IActionResult> GetTodayAppointmentsForDoctor(int doctorId)
+        {
+            var appointments = await _repo.GetTodayAppointmentsForDoctorAsync(doctorId);
+
+            if (appointments == null || !appointments.Any())
+            {
+                return NotFound("No appointments found for today.");
+            }
+
+            return Ok(appointments);
+        }
+
+            //[HttpGet("Getmedical-history")]
+            //public async Task<IActionResult> GetMedicalHistory(string email)
+            //{
+            //    var result = await _repo.GetMedicalHistoryAsync(email);
+
+            //    if (result == null)
+            //        return NotFound("No Medical History");
+
+            //    return File(
+            //    fileContents: result.Value.FilePath,
+            //    contentType: result.Value.MimeType,
+            //    fileDownloadName: result.Value.FileName
+            //    );
+
+            //}
+
+        }
     }
-}
 //if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
 //        return BadRequest("Invalid Specialization");
 //    var DoctorDetails = _context.Users.Where(x => x.Role.Equals(UserRole.Doctor) && x.Specialization.Equals(specialization)&&x.Active_Status.Equals(Status.Online))

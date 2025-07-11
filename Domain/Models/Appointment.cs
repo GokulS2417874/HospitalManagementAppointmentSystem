@@ -15,15 +15,15 @@ namespace Domain.Models
         public TimeOnly? AppointmentStartTime { get; set; }
         public TimeOnly? AppointmentEndTime { get; set; }
         public AppointmentStatus? AppointmentStatus { get; set; } = Enum.AppointmentStatus.InProgress;
-        //public bool? IsFollowUpRequired { get; set; }
-        //public DateTime? FollowUpDate { get; set; }
-        //public string FilePath { get; set; }
+        public byte[]? FilePath { get; set; }
+        public string? FileName { get; set; }
+        public string? MimeType { get; set; }
         public int PatientId { get; set; }
         public string PatientName { get; set; }
         public int? DoctorId { get; set; }
         public string? DoctorName { get; set; }
         public specialization Specialization { get; set; }
-
+        public bool IsReminderSent { get; set; }
 
     }
 }

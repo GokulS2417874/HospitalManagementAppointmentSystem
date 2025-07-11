@@ -1,5 +1,6 @@
 
 using Domain.Data;
+using Domain.Models;
 using Infrastructure.Interface;
 using Infrastructure.Repositorty;
 using Infrastructure.Repository;
@@ -19,21 +20,23 @@ namespace HospitalManagementAndAppointmentSystem
             var builder = WebApplication.CreateBuilder(args);
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("HospitalManagementAndAppointmentSystem")));
+            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString, b => b.MigrationsAssembly("Domain")));
 
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
+
+            builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+
             builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             builder.Services.AddScoped<TokenGeneration>();
             builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
-
-
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-            var key = builder.Configuration["Jwt:Key"];
+            var key = builder.Configuration["ApiSettings:Secret"];
 
             builder.Services.AddAuthentication(options =>
             {

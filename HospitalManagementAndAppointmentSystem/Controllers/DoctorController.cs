@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -32,17 +33,16 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(doctors);
         }
 
-        //[HttpGet("GetDoctorsBySpecialization")]
-        //public async Task<IActionResult> GetDoctorsBySpecialization([FromQuery] string specialization)
-        //{
-        //    var doctors = await _doctorRepo.GetDoctorsBySpecializationAsync(specialization);
-        //    if (!doctors.Any()) return NotFound("Doctor not found for Specialization");
-        //    return Ok(doctors);
-        //}
-
-
-
-
+        [HttpGet("GetDoctorsBySpecialization")]
+        public async Task<IActionResult> GetDoctorsBySpecialization([FromQuery] specialization  Specializaition)
+        {
+            var doctors = await _doctorRepo.GetDoctorsBySpecializationAsync(Specializaition);
+            if (!doctors.Any()) 
+            {
+                return NotFound("Doctor not found for Specialization");
+             }
+            return Ok(doctors);
+        }
 
     }
 }
