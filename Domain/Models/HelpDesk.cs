@@ -13,10 +13,10 @@ namespace Domain.Models
         {
             Role = UserRole.HelpDesk;
         }
-        public string? Languages { get; set; }
+        //public string? Languages { get; set; }
   
-        public string? Qualification { get; set; }
-        public Status? Active_Status { get; set; }
+        //public string? Qualification { get; set; }
+        //public Status? Active_Status { get; set; }
     }
 
 }

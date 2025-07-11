@@ -36,7 +36,7 @@ namespace Domain.Models
             HelpDesk,
             Admin,
         }
-        public enum ScheduleTime
+        public enum ShiftTime
         {
             Morning,
             Afternoon,
@@ -44,11 +44,12 @@ namespace Domain.Models
         }
         public enum AppointmentStatus
         {
-            Pending,
-            Confirmed,
+            InProgress,
+            Scheduled,
             Cancelled,
             Completed,
-            Rescheduled
+            Rescheduled,
+            NotAttended
         }
         public enum NotificationType
         {
@@ -61,6 +62,21 @@ namespace Domain.Models
         {
             Self,
             HelpDesk
+        }
+        public enum specialization
+        {
+            Cardiologist,
+            Dermatologist,
+            Neurologist,
+            Orthopedic_Surgeon,
+            Pediatrician,
+            Psychiatrist,
+            Ophthalmologist,
+            ENT_Specialist,
+            Gastroenterologist,
+            Urologist,
+            Endocrinologist,
+            Oncologist
         }
     }
 }

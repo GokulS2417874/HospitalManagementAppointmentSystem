@@ -1,0 +1,138 @@
+﻿using Domain.Data;
+using Domain.Models;
+using Infrastructure.DTOs;
+using Infrastructure.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Web.Helpers;
+using static Domain.Models.Enum;
+
+namespace HospitalManagementAndAppointmentSystem.Controllers
+{
+    public class AppointmentController : Controller
+    {
+        private readonly IAppointmentRepository _repo;
+        private readonly AppDbContext _context;
+        public AppointmentController(IAppointmentRepository repo, AppDbContext context)
+        {
+            _repo = repo;
+            _context = context;
+        }
+        [HttpPut("ActiveStatus")]
+        public async Task<IActionResult> UpdateActiveStatus(string Email)
+        {
+            var DoctorDetails = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
+            DoctorDetails.Active_Status = Status.Online;
+            await _context.SaveChangesAsync();
+            return Ok("Updated");
+        }
+
+        [HttpGet("ListOfDoctors")]
+        public async Task<IActionResult> DoctorsList(specialization specialization,ShiftTime Shift)
+        {
+            var Result = await _repo.GenerateDoctorSlots(specialization, Shift);
+
+            return Ok(Result);
+
+        }
+        //[Authorize(Roles = "Patient")]
+        [HttpPost("BookAppointment")]
+        public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email)
+        {
+            var AppointmentDetails = await _repo.BookAppointment(dto, specialization, Email);
+            return Ok(AppointmentDetails);
+        }
+        //[Authorize(Roles = "Patient")]
+        [HttpPut("Reschedule")]
+        public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto,string Email)
+        {
+            //var Email = User.Identity.Name;
+            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(Email);
+
+            if (AppointmentDetails == null)
+            {
+                return BadRequest("Patient not found.");
+            }
+            else
+            {
+                AppointmentDetails.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
+                AppointmentDetails.AppointmentStartTime = dto.AppointmentStartTime;
+                AppointmentDetails.AppointmentEndTime = dto.AppointmentEndTime;
+                AppointmentDetails.AppointmentStatus = AppointmentStatus.Rescheduled;
+            }
+            await _context.SaveChangesAsync();
+            return Ok(AppointmentDetails);
+        }
+        //[Authorize(Roles = "Patient")]
+        [HttpPut("Cancelled")]
+        public async Task<IActionResult> Cancelled([FromForm] CancelledDto dto)
+        {
+            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(dto.Email);
+
+            if (AppointmentDetails == null)
+            {
+                return BadRequest("Patient not found.");
+            }
+            else
+            {
+                AppointmentDetails.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
+                AppointmentDetails.AppointmentStartTime = null;
+                AppointmentDetails.AppointmentEndTime = null;
+                AppointmentDetails.AppointmentStatus = AppointmentStatus.Cancelled;
+            }
+            await _context.SaveChangesAsync();
+            return Ok(AppointmentDetails);
+        }
+
+        [HttpPut("UpdateAppointmentStatus")]
+        public async Task<IActionResult> UpdateAppointment(string Email,DoctorAppointmentUpdateDto dto)
+        {
+            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(Email);
+
+            if (AppointmentDetails == null)
+            {
+                return BadRequest("Patient not found.");
+            }
+            else
+            {
+                AppointmentDetails.AppointmentStartTime = null;
+                AppointmentDetails.AppointmentEndTime = null;
+                AppointmentDetails.AppointmentStatus = dto.IsAttended && AppointmentDetails.AppointmentEndTime > TimeOnly.FromDateTime(DateTime.Now) ? AppointmentStatus.Completed : (AppointmentDetails.AppointmentEndTime < TimeOnly.FromDateTime(DateTime.Now) ? AppointmentStatus.NotAttended : AppointmentDetails.AppointmentStatus);
+            }
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+    }
+}
+//if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
+//        return BadRequest("Invalid Specialization");
+//    var DoctorDetails = _context.Users.Where(x => x.Role.Equals(UserRole.Doctor) && x.Specialization.Equals(specialization)&&x.Active_Status.Equals(Status.Online))
+//                                                   .GroupBy(x => x.Specialization)
+//                                                   .Select(group => new
+//                                                   {
+//                                                       Specialization = group.Key,
+//                                                       Doctors = group.OrderByDescending(x => x.UserName)
+//                                                   .Select(x => new DoctorDto
+//                                                   {
+//                                                       DoctorId = x.UserId,
+//                                                       DoctorName = x.UserName,
+//                                                       //Specialization = Specialization.ToString()
+//                                                   }).ToList()
+//                                                   }).ToList();
+//var OpeningTime = new TimeOnly(9, 0, 0);
+//var ClosingTime = new TimeOnly(17, 0, 0);
+//if (dto.AppointmentTime < OpeningTime || dto.AppointmentTime > ClosingTime)
+//{
+//    return BadRequest("Appointment Must be Scheduled Between 9AM AND 5PM");
+//}
+//else
+//{
+//}
+//                //var OpeningTime = new TimeOnly(9, 0, 0);
+//                //var ClosingTime = new TimeOnly(17, 0, 0);
+//                //if (dto.AppointmentTime < OpeningTime || dto.AppointmentTime > ClosingTime)
+//                //{
+//                //    return BadRequest("Appointment Must be Scheduled Between 9AM AND 5PM");
+//                //}

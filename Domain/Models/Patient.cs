@@ -13,11 +13,10 @@ namespace Domain.Models
         {
             Role = UserRole.Patient;
         }
-        [Required]
-        public DateTime? DateOfBirth { get; set; }
-        [Required]
-        public PatientGender? Gender { get; set; }
-        public AppointmentType? AppointmentBookedBy { get; set; }
+        
+        //public DateOnly? DateOfBirth { get; set; }
+        //public PatientGender? Gender { get; set; }
+        //public AppointmentType? AppointmentBookedBy { get; set; }
     }
 }
 

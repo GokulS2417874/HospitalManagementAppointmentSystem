@@ -1,12 +1,14 @@
 
 using Domain.Data;
 using Infrastructure.Interface;
+using Infrastructure.Repositorty;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace HospitalManagementAndAppointmentSystem
 {
@@ -22,7 +24,9 @@ namespace HospitalManagementAndAppointmentSystem
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             builder.Services.AddScoped<TokenGeneration>();
+            builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));

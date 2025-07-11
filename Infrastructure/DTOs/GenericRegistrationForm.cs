@@ -21,12 +21,14 @@ namespace Infrastructure.DTOs
         public string? EmergencyContactPhoneNumber { get; set; }
 
         // Optional fields for specific roles
-        public string? Specialization { get; set; }
+        public specialization? Specialization { get; set; }
         public string? Qualification { get; set; }
         public int? ExperienceYears { get; set; }
-        public DateTime? DateOfBirth { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
         public PatientGender? Gender { get; set; }
         public AppointmentType? AppointmentBookedBy { get; set; }
         public string? Languages { get; set; }
+        public ShiftTime? Shift { get; set; }
+        
     }
 }
