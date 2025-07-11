@@ -10,7 +10,5 @@ namespace Domain.Models
     {
         public int PaymentId { get; set; }
         public int TotalAmount { get; set; }
-        public Appointment Appointment { get; set; }
-        public Appointment AppointmentId { get; set; }
     }
 }

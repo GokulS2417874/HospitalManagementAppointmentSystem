@@ -56,6 +56,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     Specialization = form.Specialization,
                     Qualification = form.Qualification,
                     ExperienceYears = form.ExperienceYears ?? 0,
+                    Shift = form.Shift,
                     Role = UserRole.Doctor
                 },
 
@@ -68,7 +69,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     EmergencyContactName = form.EmergencyContactName,
                     EmergencyContactRelationship = form.EmergencyContactRelationship,
                     EmergencyContactPhoneNumber = form.EmergencyContactPhoneNumber,
-                    DateOfBirth = form.DateOfBirth ?? DateTime.MinValue,
+                    DateOfBirth = form.DateOfBirth,
                     Gender = form.Gender ?? PatientGender.Others,
                     AppointmentBookedBy = form.AppointmentBookedBy ?? AppointmentType.Self,
                     Role = UserRole.Patient
