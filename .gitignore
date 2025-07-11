@@ -16,3 +16,6 @@ obj/
 
 # Ignore other IDE-specific folders
 .vscode/
+
+# Ignore EF Core Migrations folder
+**/Migrations/
