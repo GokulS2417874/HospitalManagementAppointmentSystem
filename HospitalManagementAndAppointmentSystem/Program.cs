@@ -37,6 +37,7 @@ namespace HospitalManagementAndAppointmentSystem
                   builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
             builder.Services.AddScoped<IHelpDeskRepository, HelpDeskRepository>();
+            builder.Services.AddScoped<IPayementRepository, PaymentRepository>();
 
 
 

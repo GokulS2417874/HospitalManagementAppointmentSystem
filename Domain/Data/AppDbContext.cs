@@ -19,5 +19,25 @@ namespace Domain.Data
         //public DbSet<Doctor> Doctors { get; set; }
         //public DbSet<HelpDesk> HelpDesks { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+          
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Patient)
+                .WithMany( u => u.Payments)
+                .HasForeignKey(p => p.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Payment>()
+               .HasOne(a => a.Appointment)
+               .WithMany()
+               .HasForeignKey(a => a.AppointmentId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+
+        }
     }
 }
