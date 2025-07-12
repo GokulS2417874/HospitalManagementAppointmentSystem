@@ -18,8 +18,14 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         }
 
         [HttpGet("GetAllDoctors")]
-      
         public async Task<IActionResult> GetAllDoctors()
+        {
+            var doctors = await _doctorRepo.GetAllDoctorsAsync();
+            return Ok(doctors);
+        }
+
+        [HttpGet("GetAllDoctorsById")]
+        public async Task<IActionResult> GetDoctorByIdAsync(int id)
         {
             var doctors = await _doctorRepo.GetAllDoctorsAsync();
             return Ok(doctors);

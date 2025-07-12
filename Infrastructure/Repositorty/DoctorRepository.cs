@@ -37,7 +37,7 @@ namespace Infrastructure.Repositorty
             d.EmergencyContactRelationship
         }).ToListAsync();
 
-        public async Task<object> GetDoctorByIdAsync(int id)
+        public async Task<IEnumerable<object>> GetDoctorByIdAsync(int id)
         {
             return await _context.Users.Where(d => d.UserId == id && d.Role == UserRole.Doctor).Select(d => new
             {
