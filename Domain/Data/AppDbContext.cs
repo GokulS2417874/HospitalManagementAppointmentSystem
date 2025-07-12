@@ -20,6 +20,7 @@ namespace Domain.Data
         //public DbSet<HelpDesk> HelpDesks { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -37,6 +38,11 @@ namespace Domain.Data
                .HasForeignKey(a => a.AppointmentId)
                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Prescription>()
+                .HasOne(p=> p.Patient)
+                .WithMany()
+                .HasForeignKey(p => p.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

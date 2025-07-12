@@ -78,7 +78,6 @@ namespace Domain.Models
             Endocrinologist,
             Oncologist
         }
-
         public enum PaymentMethod
         {
             Card,
@@ -86,6 +85,33 @@ namespace Domain.Models
             Upi,
             NetBanking
         }
+        public enum TabletScheduleTime
+        {
+            Morning,
+            Afternoon,
+            Evening,
+            Night,
+            AfterMeal,
+            BeforeMeal
+        }
+        public enum MedicineType
+        {
+            Paracetamol,       
+            Ibuprofen,        
+            Aspirin,           
+            Naproxen,          
+            Diclofenac,        
+            Tramadol,
+            Morphine,          
+            Codeine,          
+            Amitriptyline,     
+            Effervescent,      
+            GelForm,           
+            SyrupForm,       
+            Inhaler,           
+            Suppository        
+        }
     }
+
 }
 
