@@ -78,6 +78,14 @@ namespace Domain.Models
             Endocrinologist,
             Oncologist
         }
+
+        public enum PaymentMethod
+        {
+            Card,
+            Cash,
+            Upi,
+            NetBanking
+        }
     }
 }
 

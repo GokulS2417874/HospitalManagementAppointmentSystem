@@ -36,6 +36,7 @@ namespace Domain.Models
         public int? Consultant_fees { get; set; } = 500;
         public string? Languages { get; set; }
         public ShiftTime? Shift { get; set; }
+        public ICollection<Payment> Payments { get; set; }
     }
 }
 
