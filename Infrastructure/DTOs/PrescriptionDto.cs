@@ -1,26 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Domain.Models.Enum;
 
-namespace Domain.Models
+namespace Infrastructure.DTOs
 {
-    public class Prescription
+    public class PrescriptionDto
     {
-        public int PrescriptionId { get; set; }
         public int AppointmentId { get; set; }
-        public Appointment Appointment { get; set; }
         public int PatientId { get; set; }
-        public Users Patient { get; set; }
         public int DoctorId { get; set; }
-        public Users Doctor { get; set; }
         public MedicineType Medication { get; set; }
         public string Dosage { get; set; }
         public string Instructions { get; set; }
         public TabletScheduleTime ScheduleTime { get; set; }
-        public DateTime PrescribedOn { get; set; } = DateTime.Now;
     }
+
 }
