@@ -1,0 +1,18 @@
+﻿using Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static Domain.Models.Enum;
+
+namespace Infrastructure.Interface
+{
+    public interface IHelpDeskRepository
+    {
+        Task<IEnumerable<object>> GetAllHelpDeskAsync();
+        Task<object> GetHelpDeskByIdAsync(int id);
+        Task<IEnumerable<object>> GetHelpDeskByNameAsync(string name);
+      //  Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization);
+    }
+}

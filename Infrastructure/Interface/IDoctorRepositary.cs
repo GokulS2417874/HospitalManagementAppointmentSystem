@@ -14,7 +14,7 @@ namespace Infrastructure.Interface
     public interface IDoctorRepository
     {
         Task<IEnumerable<object>> GetAllDoctorsAsync();
-        Task<object> GetDoctorByIdAsync(int id);
+        Task<IEnumerable<object>> GetDoctorByIdAsync(int id);
         Task<IEnumerable<object>> GetDoctorsByNameAsync(string name);
         Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization);
 
