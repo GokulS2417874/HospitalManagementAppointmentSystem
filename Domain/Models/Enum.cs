@@ -111,6 +111,13 @@ namespace Domain.Models
             Inhaler,           
             Suppository        
         }
+        public enum SlotStatus
+        {
+            Not_Available,
+            Busy,
+            Available
+
+        }
     }
 
 }

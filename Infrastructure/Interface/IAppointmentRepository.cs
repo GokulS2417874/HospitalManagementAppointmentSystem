@@ -9,7 +9,7 @@ namespace Infrastructure.Interface
     public interface IAppointmentRepository
     {
         Task<List<SlotWithDoctorDto>> GenerateDoctorSlots(specialization specialization, ShiftTime shift);
-        Task<Appointment> BookAppointment(AppointmentDto dto, specialization specialization, string email);
+        Task<Appointment> BookAppointment(AppointmentDto dto, specialization specialization, string email,ShiftTime shift);
         Task<Appointment> RetrieveAppointmentDetails(string Email);
 
         Task<(byte[] FilePath, string MimeType, string FileName)?> GetPatientMedicalHistoryAsync(int patientId);

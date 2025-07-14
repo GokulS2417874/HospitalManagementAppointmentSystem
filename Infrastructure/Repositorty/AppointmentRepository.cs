@@ -24,9 +24,9 @@ namespace Infrastructure.Repositorty
             TimeOnly StartTime = Shift
             switch
             {
-                ShiftTime.Morning => new TimeOnly(5, 0),
-                ShiftTime.Afternoon => new TimeOnly(13, 0),
-                ShiftTime.Night => new TimeOnly(21, 0),
+                ShiftTime.Morning => new TimeOnly(5),
+                ShiftTime.Afternoon => new TimeOnly(13),
+                ShiftTime.Night => new TimeOnly(21),
                 _ => throw new ArgumentOutOfRangeException(nameof(Shift), "Invalid shift")
             };
             var start = StartTime;
@@ -50,7 +50,7 @@ namespace Infrastructure.Repositorty
                         EndTime = End,
                         Shift = Shift,
                         IsBooked = isBooked,
-                        Status = isBooked ? Status.Busy : (End < curtime) ? Status.Offline : Status.Online
+                        Status = isBooked ? SlotStatus.Busy : (End < curtime) ? SlotStatus.Not_Available : SlotStatus.Available
                     });
                 }
                 result.Add(new SlotWithDoctorDto
@@ -64,7 +64,7 @@ namespace Infrastructure.Repositorty
             }
             return result;
         }
-        public async Task<Appointment> BookAppointment(AppointmentDto dto, specialization specialization, string email)
+        public async Task<Appointment> BookAppointment(AppointmentDto dto, specialization specialization, string email, ShiftTime shift)
         {
             byte[]? filebytes = null;
             if (dto.FilePath != null)
@@ -82,9 +82,12 @@ namespace Infrastructure.Repositorty
 
             if (patientDetails == null)
                 return null;
+            var Today = DateOnly.FromDateTime(DateTime.Today);
 
             if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
                 return null;
+            
+
 
             var appointment = new Appointment
             {
@@ -102,8 +105,8 @@ namespace Infrastructure.Repositorty
                 MimeType = dto.FilePath?.ContentType,
             };
 
-            _context.Appointments.Add(appointment);
-            await _context.SaveChangesAsync();
+            //_context.Appointments.Add(appointment);
+            //await _context.SaveChangesAsync();
 
             return appointment;
         }
