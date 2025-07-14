@@ -33,9 +33,8 @@ namespace HospitalManagementAndAppointmentSystem
             builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-
-                  builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-
+            builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+            builder.Services.AddScoped<IAdminRepository, AdminRepository>();
             builder.Services.AddScoped<IHelpDeskRepository, HelpDeskRepository>();
             builder.Services.AddScoped<IPayementRepository, PaymentRepository>();
             builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();

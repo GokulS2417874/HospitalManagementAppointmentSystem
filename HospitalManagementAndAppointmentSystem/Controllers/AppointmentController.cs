@@ -7,12 +7,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Helpers;
+using Microsoft.AspNetCore.Http;
 using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
-    public class AppointmentController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AppointmentController : ControllerBase
     {
+        
+
         private readonly IAppointmentRepository _repo;
         private readonly AppDbContext _context;
         public AppointmentController(IAppointmentRepository repo, AppDbContext context)
@@ -20,6 +25,8 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             _repo = repo;
             _context = context;
         }
+
+        
         [HttpPut("ActiveStatus")]
         public async Task<IActionResult> UpdateActiveStatus(string Email)
         {
@@ -39,10 +46,35 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         }
         //[Authorize(Roles = "Patient")]
         [HttpPost("BookAppointment")]
-        public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email)
+        public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email,ShiftTime shift)
         {
-            var AppointmentDetails = await _repo.BookAppointment(dto, specialization, Email);
-            return Ok(AppointmentDetails);
+            var Today = DateOnly.FromDateTime(DateTime.Today);
+            var AppointmentDetails = await _repo.BookAppointment(dto, specialization, Email,shift);
+            var isAlreadyBooked = await _context.Appointments
+                                                .AnyAsync(a => (a.AppointmentDate == Today && a.PatientId == AppointmentDetails.PatientId));
+            var isSlotAlreadyBooked = await _context.Appointments.AnyAsync(a => a.DoctorId == AppointmentDetails.DoctorId
+                                                                      && a.AppointmentDate == Today
+                                                                      && a.AppointmentStartTime == AppointmentDetails.AppointmentStartTime);
+            if(!isAlreadyBooked||AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.Cancelled)|| AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.NotAttended))
+            {
+                if (!isSlotAlreadyBooked)
+                {
+                    _context.Appointments.Add(AppointmentDetails);
+                    _context.SaveChanges();
+                    return Ok(AppointmentDetails);
+                }
+                else
+                {
+                    return BadRequest("Slot is Already Booked");
+                }
+            }
+            else
+            {
+                return BadRequest("Patient already Booked an Appointment");
+            }
+
+
+            
         }
         //[Authorize(Roles = "Patient")]
         [HttpPut("Reschedule")]
@@ -121,7 +153,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         }
 
         [HttpGet("GetAppointmentsByPatientId")]
-        public async Task<IActionResult> ViewAppointmentsForPatient([FromQuery] int PatId)
+        public async Task<IActionResult> ViewAppointmentsForPatient([FromQuery]int PatId)
         {
             var appointments = await _repo.GetAppointmentsByPatientIdAsync(PatId);
 

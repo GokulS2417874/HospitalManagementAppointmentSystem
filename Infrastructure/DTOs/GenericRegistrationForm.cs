@@ -15,20 +15,23 @@ namespace Infrastructure.DTOs
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
+        public DateOnly? DateOfBirth { get; set; }
+        public PatientGender? Gender { get; set; }
         public string? PhoneNumber { get; set; }
         public string? EmergencyContactName { get; set; }
         public Relationship? EmergencyContactRelationship { get; set; }
         public string? EmergencyContactPhoneNumber { get; set; }
-
         // Optional fields for specific roles
         public specialization? Specialization { get; set; }
         public string? Qualification { get; set; }
         public int? ExperienceYears { get; set; }
-        public DateOnly? DateOfBirth { get; set; }
-        public PatientGender? Gender { get; set; }
-        public AppointmentType? AppointmentBookedBy { get; set; }
-        public string? Languages { get; set; }
         public ShiftTime? Shift { get; set; }
+        public string? Languages { get; set; }
+        /// <summary>
+        //public AppointmentType? RegisteredBy { get; set; } = AppointmentType.Self;
+        /// </summary>
+        //public bool isApprovedBy { get; set; } = false;
+        
         
     }
 }
