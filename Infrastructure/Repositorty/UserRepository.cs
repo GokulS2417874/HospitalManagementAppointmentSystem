@@ -52,8 +52,8 @@ namespace Infrastructure.Repository
                 if (dto.ExperienceYears.HasValue)
                     user.ExperienceYears = dto.ExperienceYears.Value;
 
-                if (dto.Shift.HasValue)
-                    user.Shift = dto.Shift;
+                //if (dto.Shift.HasValue)
+                //    user.Shift = dto.Shift;
             }
 
             if (user.Role == UserRole.Patient)
@@ -61,8 +61,8 @@ namespace Infrastructure.Repository
                 if (!string.IsNullOrWhiteSpace(dto.Languages))
                     user.Languages = dto.Languages;
 
-                if (dto.Shift.HasValue)
-                    user.Shift = dto.Shift;
+                //if (dto.Shift.HasValue)
+                //    user.Shift = dto.Shift;
             }
 
             await _context.SaveChangesAsync();
