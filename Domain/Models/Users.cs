@@ -34,9 +34,38 @@ namespace Domain.Models
         public Status? Active_Status { get; set; } = Status.Offline;
         public int? Consultant_fees { get; set; } = 500;
         public string? Languages { get; set; }
-        public ShiftTime? Shift { get; set; }
+        public ShiftTime? Shift { get; set; } = ShiftTime.NotAllocated;
+        public TimeOnly? ShiftStartTime
+        {
+            get
+            {
+                if (Shift.Equals(ShiftTime.Morning))
+                {
+                    return new TimeOnly(5,0);
+                }
+                else
+                {
+                    return Shift.Equals(ShiftTime.Morning) ? new TimeOnly(13,0) :new TimeOnly(21,0);
+                }
+            }
+        }
+
+        public TimeOnly? ShiftEndTime
+        {
+            get
+            {
+                if (Shift.Equals(ShiftTime.Morning))
+                {
+                    return new TimeOnly(13,0);
+                }
+                else
+                {
+                    return Shift.Equals(ShiftTime.Morning) ? new TimeOnly(21,0) : new TimeOnly(5,0);
+                }
+            }
+        }
         public AppointmentType? RegisteredBy { get; set; } = AppointmentType.Self;
-        public bool IsApprovedByAdmin { get; set; } = false;
+        public AdminApproval IsApprovedByAdmin { get; set; } = AdminApproval.Pending;
         public ICollection<Payment> Payments { get; set; }
     }
 }

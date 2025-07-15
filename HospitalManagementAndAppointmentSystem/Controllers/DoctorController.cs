@@ -1,6 +1,9 @@
-﻿using Infrastructure.Interface;
+﻿using Domain.Data;
+using Infrastructure.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Web.Helpers;
 using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
@@ -11,10 +14,12 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
     {
 
         private readonly IDoctorRepository _doctorRepo;
+        private readonly AppDbContext _context;
 
-        public DoctorController(IDoctorRepository doctorRepo)
+        public DoctorController(IDoctorRepository doctorRepo,AppDbContext context)
         {
             _doctorRepo = doctorRepo;
+            _context = context;
         }
 
         [HttpGet("GetAllDoctors")]
@@ -48,6 +53,16 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return NotFound("Doctor not found for Specialization");
              }
             return Ok(doctors);
+        }
+        [HttpPut("ActiveStatus")]
+        public async Task<IActionResult> UpdateActiveStatus(string Email,Status status)
+        {
+            var EmployeeDetails = await _doctorRepo.UpdateActiveStatus(Email, status);
+            if (EmployeeDetails == null)
+                return BadRequest("EmployeeId not found");
+            return Ok(EmployeeDetails);
+
+
         }
 
     }

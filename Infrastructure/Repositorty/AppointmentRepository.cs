@@ -24,9 +24,9 @@ namespace Infrastructure.Repositorty
             TimeOnly StartTime = Shift
             switch
             {
-                ShiftTime.Morning => new TimeOnly(5),
-                ShiftTime.Afternoon => new TimeOnly(13),
-                ShiftTime.Night => new TimeOnly(21),
+                ShiftTime.Morning => new TimeOnly(5,0),
+                ShiftTime.Afternoon => new TimeOnly(13,0),
+                ShiftTime.Night => new TimeOnly(21,0),
                 _ => throw new ArgumentOutOfRangeException(nameof(Shift), "Invalid shift")
             };
             var start = StartTime;
@@ -64,7 +64,7 @@ namespace Infrastructure.Repositorty
             }
             return result;
         }
-        public async Task<Appointment> BookAppointment(AppointmentDto dto, specialization specialization, string email, ShiftTime shift)
+        public async Task<object> BookAppointment(AppointmentDto dto, specialization specialization, string email, ShiftTime shift)
         {
             byte[]? filebytes = null;
             if (dto.FilePath != null)
@@ -86,10 +86,8 @@ namespace Infrastructure.Repositorty
 
             if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
                 return null;
-            
 
-
-            var appointment = new Appointment
+            var AppointmentDetails = new Appointment
             {
                 PatientId = patientDetails.UserId,
                 PatientName = patientDetails.UserName,
@@ -104,11 +102,30 @@ namespace Infrastructure.Repositorty
                 FileName = dto.FilePath?.FileName,
                 MimeType = dto.FilePath?.ContentType,
             };
+            var isAlreadyBooked = await _context.Appointments
+                                                .AnyAsync(a => (a.AppointmentDate == Today && a.PatientId == AppointmentDetails.PatientId));
+            var isSlotAlreadyBooked = await _context.Appointments.AnyAsync(a => a.DoctorId == AppointmentDetails.DoctorId
+                                                                      && a.AppointmentDate == Today
+                                                                      && a.AppointmentStartTime == AppointmentDetails.AppointmentStartTime);
+            if (!isAlreadyBooked || AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.Cancelled) || AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.NotAttended))
+            {
+                if (!isSlotAlreadyBooked)
+                {
+                    _context.Appointments.Add(AppointmentDetails);
+                    _context.SaveChanges();
+                    return (AppointmentDetails);
+                }
+                else
+                {
+                    return "Slot is Already Booked";
+                }
+            }
+            else
+            {
+                return "Patient already Booked an Appointment";
+            }
 
-            //_context.Appointments.Add(appointment);
-            //await _context.SaveChangesAsync();
-
-            return appointment;
+            
         }
         public async Task<Appointment> RetrieveAppointmentDetails(string email)
         {

@@ -25,7 +25,7 @@ namespace Infrastructure.DTOs
         public specialization? Specialization { get; set; }
         public string? Qualification { get; set; }
         public int? ExperienceYears { get; set; }
-        public ShiftTime? Shift { get; set; }
+        //public ShiftTime? Shift { get; set; }
         public string? Languages { get; set; }
         /// <summary>
         //public AppointmentType? RegisteredBy { get; set; } = AppointmentType.Self;

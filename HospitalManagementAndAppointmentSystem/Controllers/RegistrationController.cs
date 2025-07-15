@@ -58,7 +58,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     Specialization = form.Specialization,
                     Qualification = form.Qualification,
                     ExperienceYears = form.ExperienceYears ?? 0,
-                    Shift = form.Shift,
+                    //Shift = form.Shift,
                     Role = UserRole.Doctor
                 },
 

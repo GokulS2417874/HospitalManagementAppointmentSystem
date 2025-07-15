@@ -1,13 +1,8 @@
 ﻿using Domain.Data;
-using Domain.Models;
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
-using Infrastructure.Repositorty;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Web.Helpers;
-using Microsoft.AspNetCore.Http;
 using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
@@ -16,8 +11,6 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
-        
-
         private readonly IAppointmentRepository _repo;
         private readonly AppDbContext _context;
         public AppointmentController(IAppointmentRepository repo, AppDbContext context)
@@ -25,17 +18,6 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             _repo = repo;
             _context = context;
         }
-
-        
-        [HttpPut("ActiveStatus")]
-        public async Task<IActionResult> UpdateActiveStatus(string Email)
-        {
-            var DoctorDetails = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
-            DoctorDetails.Active_Status = Status.Online;
-            await _context.SaveChangesAsync();
-            return Ok("Updated");
-        }
-
         [HttpGet("ListOfDoctors")]
         public async Task<IActionResult> DoctorsList(specialization specialization,ShiftTime Shift)
         {
@@ -50,32 +32,16 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         {
             var Today = DateOnly.FromDateTime(DateTime.Today);
             var AppointmentDetails = await _repo.BookAppointment(dto, specialization, Email,shift);
-            var isAlreadyBooked = await _context.Appointments
-                                                .AnyAsync(a => (a.AppointmentDate == Today && a.PatientId == AppointmentDetails.PatientId));
-            var isSlotAlreadyBooked = await _context.Appointments.AnyAsync(a => a.DoctorId == AppointmentDetails.DoctorId
-                                                                      && a.AppointmentDate == Today
-                                                                      && a.AppointmentStartTime == AppointmentDetails.AppointmentStartTime);
-            if(!isAlreadyBooked||AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.Cancelled)|| AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.NotAttended))
+            if(AppointmentDetails is string message)
             {
-                if (!isSlotAlreadyBooked)
-                {
-                    _context.Appointments.Add(AppointmentDetails);
-                    _context.SaveChanges();
-                    return Ok(AppointmentDetails);
-                }
-                else
-                {
-                    return BadRequest("Slot is Already Booked");
-                }
+                return BadRequest(message);
             }
             else
             {
-                return BadRequest("Patient already Booked an Appointment");
+                return Ok(AppointmentDetails);
             }
-
-
             
-        }
+            }
         //[Authorize(Roles = "Patient")]
         [HttpPut("Reschedule")]
         public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto,string Email)
@@ -194,22 +160,6 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(appointments);
         }
 
-            //[HttpGet("Getmedical-history")]
-            //public async Task<IActionResult> GetMedicalHistory(string email)
-            //{
-            //    var result = await _repo.GetMedicalHistoryAsync(email);
-
-            //    if (result == null)
-            //        return NotFound("No Medical History");
-
-            //    return File(
-            //    fileContents: result.Value.FilePath,
-            //    contentType: result.Value.MimeType,
-            //    fileDownloadName: result.Value.FileName
-            //    );
-
-            //}
-
         }
     }
 //if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
@@ -242,3 +192,18 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 //                //{
 //                //    return BadRequest("Appointment Must be Scheduled Between 9AM AND 5PM");
 //                //}
+//[HttpGet("Getmedical-history")]
+//public async Task<IActionResult> GetMedicalHistory(string email)
+//{
+//    var result = await _repo.GetMedicalHistoryAsync(email);
+
+//    if (result == null)
+//        return NotFound("No Medical History");
+
+//    return File(
+//    fileContents: result.Value.FilePath,
+//    contentType: result.Value.MimeType,
+//    fileDownloadName: result.Value.FileName
+//    );
+
+//}
