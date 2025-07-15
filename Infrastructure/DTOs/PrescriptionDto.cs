@@ -12,7 +12,7 @@ namespace Infrastructure.DTOs
         public int AppointmentId { get; set; }
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
-        public MedicineType Medication { get; set; }
+        public List<MedicineType> Medication { get; set; }
         public string Dosage { get; set; }
         public string Instructions { get; set; }
         public TabletScheduleTime ScheduleTime { get; set; }

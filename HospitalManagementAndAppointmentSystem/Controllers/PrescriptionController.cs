@@ -25,14 +25,14 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpPut("updatePrescription/{id}")]
-        public async Task<IActionResult> UpdatePrescription(int id, [FromForm] PrescriptionDto dto)
-        {
-            var result = await _repository.UpdatePrescriptionAsync(id, dto);
-            if (result.Success)
-                return Ok(result.Message);
-            return NotFound(result.Message);
-        }
+        //[HttpPut("updatePrescription/{id}")]
+        //public async Task<IActionResult> UpdatePrescription(int id, [FromForm] PrescriptionDto dto)
+        //{
+        //    var result = await _repository.UpdatePrescriptionAsync(id, dto);
+        //    if (result.Success)
+        //        return Ok(result.Message);
+        //    return NotFound(result.Message);
+        //}
 
         [HttpDelete("deletePrescription/{id}")]
         public async Task<IActionResult> DeletePrescription([FromForm] int id)
@@ -58,5 +58,12 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return NotFound("Prescription not found.");
             return Ok(prescription);
         }
+
+        //[HttpGet]
+
+        //public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int PerscriptionId)
+        //{
+        //    var prescription = await _repository
+        //}
     }
 }
