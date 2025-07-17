@@ -11,10 +11,11 @@ namespace Infrastructure.Interface
     public interface IPrescriptionRepository
     {
         Task<(bool Success, string Message)> AddPrescriptionAsync(PrescriptionDto dto);
-        Task<(bool Success, string Message)> UpdatePrescriptionAsync(int id, PrescriptionDto dto);
+       // Task<(bool Success, string Message)> UpdatePrescriptionAsync(int id, PrescriptionDto dto);
         Task<(bool Success, string Message)> DeletePrescriptionAsync(int id);
         Task<List<Prescription>> GetPrescriptionsByPatientAsync(int patientId);
-        Task<Prescription?> GetPrescriptionByIdAsync(int id);
+        Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id);
     }
+
 
 }

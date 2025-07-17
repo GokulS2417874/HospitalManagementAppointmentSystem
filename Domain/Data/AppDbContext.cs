@@ -44,6 +44,10 @@ namespace Domain.Data
                 .HasForeignKey(p => p.PatientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Prescription>()
+                .Property(p => p.Medication)
+                .HasConversion<int>();
+
         }
     }
 }

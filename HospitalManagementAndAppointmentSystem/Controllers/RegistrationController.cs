@@ -34,6 +34,13 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             if (await _repo.FindByEmailAsync(form.Email) is not null)
                 return BadRequest("Email already registered");
 
+            if (form.Role == UserRole.Admin)
+            {
+                var existingAdmin = await _repo.GetAdminAsync();
+                if (existingAdmin != null)
+                    return BadRequest("An Admin is already registered. Only one Admin is allowed.");
+            }
+
             Users? user = form.Role 
             switch
             {

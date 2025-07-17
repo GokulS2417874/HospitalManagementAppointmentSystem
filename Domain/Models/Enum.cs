@@ -96,23 +96,42 @@ namespace Domain.Models
             AfterMeal,
             BeforeMeal
         }
+        [Flags]
         public enum MedicineType
         {
-            Paracetamol,       
-            Ibuprofen,        
-            Aspirin,           
-            Naproxen,          
-            Diclofenac,        
-            Tramadol,
-            Morphine,          
-            Codeine,          
-            Amitriptyline,     
-            Effervescent,      
-            GelForm,           
-            SyrupForm,       
-            Inhaler,           
-            Suppository        
+            none =0  ,
+            Paracetamol   = 1,       
+            Ibuprofen = 2,        
+            Aspirin = 4,           
+            Naproxen = 8,          
+            Diclofenac = 16,        
+            Tramadol = 32,
+            Morphine =64,          
+            Codeine = 128,          
+            Amitriptyline = 256,     
+            Effervescent = 512,      
+            GelForm = 1024,           
+            SyrupForm = 2048,       
+            Inhaler = 4096,           
+            Suppository = 8192       
         }
+
+        [Flags]
+        public enum DosageType
+        {
+            None = 0,
+            Mg_100 = 1,
+            Mg_200 = 2,
+            Mg_300 = 4,
+            Mg_400 = 8,
+            Mg_500 = 16,
+            Mg_600 = 32,
+            Mg_700 = 64,
+            Mg_800 = 128,
+            Mg_900 = 256,
+            Mg_1000 = 512
+        }
+
         public enum SlotStatus
         {
             Not_Available,
@@ -125,7 +144,7 @@ namespace Domain.Models
             Approved,
             NotApproved
         }
+
     }
 
 }
-

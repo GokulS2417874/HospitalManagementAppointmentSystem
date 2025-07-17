@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Domain.Models.Enum;
 
 namespace Infrastructure.Repositorty
 {
@@ -22,15 +23,22 @@ namespace Infrastructure.Repositorty
 
         public async Task<(bool Success, string Message)> AddPrescriptionAsync(PrescriptionDto dto)
         {
+            MedicineType combinedMedication = MedicineType.none;
+
+            foreach (var med in dto.Medication)
+            {
+                combinedMedication |= med;
+            }
+
             var prescription = new Prescription
             {
                 AppointmentId = dto.AppointmentId,
                 DoctorId = dto.DoctorId,
                 PatientId = dto.PatientId,
-                Medication = dto.Medication,
+                Medication = combinedMedication,
                 Dosage = dto.Dosage,
                 Instructions = dto.Instructions,
-                ScheduleTime = dto.ScheduleTime,
+                
             };
 
             _context.Prescriptions.Add(prescription);
@@ -39,20 +47,20 @@ namespace Infrastructure.Repositorty
             return (true, "Prescription added successfully.");
         }
 
-        public async Task<(bool Success, string Message)> UpdatePrescriptionAsync(int id, PrescriptionDto dto)
-        {
-            var prescription = await _context.Prescriptions.FindAsync(id);
-            if (prescription == null)
-                return (false, "Prescription not found.");
+        //public async Task<(bool Success, string Message)> UpdatePrescriptionAsync(int id, PrescriptionDto dto)
+        //{
+        //    var prescription = await _context.Prescriptions.FindAsync(id);
+        //    if (prescription == null)
+        //        return (false, "Prescription not found.");
 
-            prescription.Medication = dto.Medication;
-            prescription.Dosage = dto.Dosage;
-            prescription.Instructions = dto.Instructions;
-            prescription.ScheduleTime = dto.ScheduleTime;
+        //    prescription.Medication = dto.Medication;
+        //    prescription.Dosage = dto.Dosage;
+        //    prescription.Instructions = dto.Instructions;
+        //    prescription.ScheduleTime = dto.ScheduleTime;
 
-            await _context.SaveChangesAsync();
-            return (true, "Prescription updated successfully.");
-        }
+        //    await _context.SaveChangesAsync();
+        //    return (true, "Prescription updated successfully.");
+        //}
 
         public async Task<(bool Success, string Message)> DeletePrescriptionAsync(int id)
         {
@@ -73,9 +81,35 @@ namespace Infrastructure.Repositorty
             .ToListAsync();
         }
 
-        public async Task<Prescription?> GetPrescriptionByIdAsync(int id)
+        public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id)
         {
-            return await _context.Prescriptions.FindAsync(id);
+            var pres = await _context.Prescriptions.FirstOrDefaultAsync(p => p.PrescriptionId == id);
+            if (pres == null)
+                return null;
+
+            var meds = System.Enum.GetValues(typeof(MedicineType))
+                .Cast<MedicineType>()
+                .Where(flag => flag != MedicineType.none && pres.Medication.HasFlag(flag))
+                .Select(m => m)
+                .ToList();
+
+            return new PrescriptionDto
+            {
+                AppointmentId = pres.AppointmentId,
+                DoctorId = pres.DoctorId,
+                PatientId = pres.PatientId,
+                Medication = meds,
+                Dosage = pres.Dosage,
+                Instructions = pres.Instructions,
+                ScheduleTime = pres.ScheduleTime
+            };
         }
+
+
+        //public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int PerscriptionId)
+        //{
+        //    var prescription = await _context.Prescriptions.FirstOrDefaultAsync(p => p.PrescriptionId = PerscriptionId);
+        //}
     }
 }
+
