@@ -46,7 +46,7 @@ namespace Domain.Models
         }
         public enum AppointmentStatus
         {
-            InProgress,
+           // InProgress,
             Scheduled,
             Cancelled,
             Completed,
