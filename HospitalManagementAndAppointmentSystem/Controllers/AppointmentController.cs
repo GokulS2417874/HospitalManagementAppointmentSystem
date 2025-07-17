@@ -55,9 +55,9 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         }
 
         [HttpPut("Cancelled")]
-        public async Task<IActionResult> Cancelled([FromForm] CancelledDto dto)
+        public async Task<IActionResult> Cancelled([FromForm] string Email)
         {
-            var result = await _repo.CancelAppointmentAsync(dto.Email);
+            var result = await _repo.CancelAppointmentAsync(Email);
             if (result == null)
                 return BadRequest("Patient not found.");
             return Ok(result);
