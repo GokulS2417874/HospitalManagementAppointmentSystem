@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using static Domain.Models.Enum;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -19,6 +20,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             _paymentRepo = paymentRepo;
         }
 
+        [Authorize(Roles = "Admin,Helpdesk")]
         [HttpPost("CreatePayment")]
 
         public async Task<IActionResult> CreatePayment([FromForm] CreatePaymentDto dto)
@@ -43,8 +45,8 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return BadRequest(e.Message);
             }
         }
-
-            [HttpGet("Appointment/{appointmentId}")]
+        [Authorize(Roles = "Admin,Doctor,Patient,Helpdesk")]
+        [HttpGet("Appointment/{appointmentId}")]
 
             public async Task<IActionResult> GetByAppointment (int appointmentId)
         {

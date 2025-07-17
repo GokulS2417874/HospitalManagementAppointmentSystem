@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Helpers;
 using static Domain.Models.Enum;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -19,6 +21,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             _repo = repo;
             _context = context;
         }
+        [Authorize(Roles = "Admin,HelpDesk,Patient")]
         [HttpGet("ListOfDoctors")]
         public async Task<IActionResult> DoctorsList(specialization specialization,ShiftTime Shift)
         {
@@ -27,7 +30,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(Result);
 
         }
-        //[Authorize(Roles = "Patient")]
+        [Authorize(Roles = "Patient")]
         [HttpPost("BookAppointment")]
         public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email,ShiftTime shift)
         {
@@ -44,7 +47,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             
             }
 
-        //[Authorize(Roles = "Patient")]
+        [Authorize(Roles = "Patient")]
         [HttpPut("Reschedule")]
         public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto, string email)
         {
@@ -53,6 +56,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return BadRequest("Patient not found.");
             return Ok(result);
         }
+        [Authorize(Roles = "Patient")]
 
         [HttpPut("Cancelled")]
         public async Task<IActionResult> Cancelled([FromForm] string Email)
@@ -63,8 +67,9 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Doctor,Admin")]
 
-        [HttpGet("GetAppointmentsForDoctor")]
+        [HttpGet("GetAppointmentsForDoctorId")]
         public async Task<IActionResult> ViewAppointmentsForDoctor([FromQuery] string Email)
         {
             var appointments = await _repo.GetAppointmentsForDoctorAsync(Email);
@@ -77,6 +82,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(appointments);
         }
 
+        [Authorize(Roles = "Doctor,Admin")]
 
         [HttpPut("UpdateAppointmentStatus-NotAttended-NotCompleted")]
         public async Task<IActionResult> UpdateAppointment( [FromForm]int AppointmentId,[FromForm] DoctorAppointmentUpdateDto dto)
@@ -88,6 +94,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         }
 
 
+        [Authorize(Roles = "Patient,Admin")]
 
         [HttpGet("GetAppointmentsByPatientId")]
         public async Task<IActionResult> ViewAppointmentsForPatient([FromQuery]int PatId)
@@ -101,8 +108,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 
             return Ok(appointments);
         }
-
-
+        [Authorize(Roles = "Doctor,Admin")]
         [HttpGet("GetPatientMedicalHistoriesById")]
         public async Task<IActionResult> GetMedicalHistory(int id)
         {
@@ -117,6 +123,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             fileDownloadName: result.Value.FileName
             );
         }
+        [Authorize(Roles = "Doctor")]
 
         [HttpGet("Today-AppointmentsForDoctor")]
         public async Task<IActionResult> GetTodayAppointmentsForDoctor(int doctorId)
