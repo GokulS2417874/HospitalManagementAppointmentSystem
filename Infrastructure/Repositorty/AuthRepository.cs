@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Helpers;
 using System.Web.Mvc;
+using static Domain.Models.Enum;
 
 namespace Infrastructure.Repository
 {
@@ -50,6 +51,14 @@ namespace Infrastructure.Repository
             var user = await _context.Users.FirstOrDefaultAsync(x => x.ResetToken == token);
             if (user != null) return user;
             return null;
+
+        }
+
+        public async Task<Users?> GetAdminAsync()
+        {
+            return await _context.Users
+                .Where(u => u.Role == UserRole.Admin)
+                .FirstOrDefaultAsync();
 
         }
     }

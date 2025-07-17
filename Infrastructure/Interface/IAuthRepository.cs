@@ -14,5 +14,7 @@ namespace Infrastructure.Interface
         Task SaveAsync();
         Task<string?> FindPassword(string Mail);
         Task<Users?> FindByResetTokenAsync(string token);
+        Task<Users?> GetAdminAsync();
     }
+
 }
