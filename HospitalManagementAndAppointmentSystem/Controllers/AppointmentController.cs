@@ -84,7 +84,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(AppointmentDetails);
         }
 
-        [HttpPut("UpdateAppointmentStatus")]
+        [HttpPut("UpdateAppointmentStatus-NotAttended-NotCompleted")]
         public async Task<IActionResult> UpdateAppointment(string Email,DoctorAppointmentUpdateDto dto)
         {
             var AppointmentDetails = await _repo.RetrieveAppointmentDetails(Email);
