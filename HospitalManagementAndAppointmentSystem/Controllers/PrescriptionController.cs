@@ -2,6 +2,7 @@
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -15,7 +16,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         {
             _repository = repository;
         }
-
+        [Authorize(Roles = "Doctor")]
         [HttpPost("AddPrescription")]
         public async Task<IActionResult> AddPrescription([FromForm] PrescriptionDto dto)
         {
@@ -33,7 +34,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         //        return Ok(result.Message);
         //    return NotFound(result.Message);
         //}
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("deletePrescription/{id}")]
         public async Task<IActionResult> DeletePrescription([FromForm] int id)
         {
@@ -42,14 +43,14 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return Ok(result.Message);
             return NotFound(result.Message);
         }
-
+        [Authorize(Roles = "Doctor,Patient,Admin")]
         [HttpGet("patientPrescription/{patientId}")]
         public async Task<IActionResult> GetPrescriptionsByPatient([FromRoute] int patientId)
         {
             var prescriptions = await _repository.GetPrescriptionsByPatientAsync(patientId);
             return Ok(prescriptions);
         }
-
+        [Authorize(Roles = "Doctor,Patient,Admin")]
         [HttpGet("GetPrescriptionbyID/{id}")]
         public async Task<IActionResult> GetPrescriptionById([FromRoute] int id)
         {

@@ -5,12 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using static Domain.Models.Enum;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
 [Route("api/[controller]")]
 [ApiController]
-public class AdminController : Controller
+[Authorize(Roles = "Admin")]
+    public class AdminController : Controller
 {
     private readonly AppDbContext _context;
     private readonly IAdminRepository _repo;
