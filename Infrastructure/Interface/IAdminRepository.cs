@@ -14,9 +14,12 @@ namespace Infrastructure.Interface
         Task<List<Users>> PendingApprovedByAdminList();
         Task<Users?> RetrieveEmpDetailsById(int EmployeeId);
         Task<List<Users>> NotApprovedByAdminList();
-       // Task<Users> RemoveEmployee(int EmployeeId);
+        // Task<Users> RemoveEmployee(int EmployeeId);
+        Task<string?> ApproveEmployeeRegistrationAsync(int employeeId, AdminApproval isApproved);
+        Task<string?> RemoveNotApprovedEmployeeAsync(int employeeId);
         Task<List<Users?>> ShiftNotAllocatedList();
-        Task<Users> AllocateShiftforEmployees(int EmployeeId, ShiftTime Shift);
+        Task<string?> AllocateShiftForEmployeeAsync(int employeeId, ShiftTime shift);
+
         Task<List<Users>> EmployeeList();
         List<Appointment> GetAppointmentsByDate(DateOnly date);
         int GetAppointmentCountByDate(DateOnly date);

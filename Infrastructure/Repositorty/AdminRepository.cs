@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositorty
 {
-   
+
     public class AdminRepository : IAdminRepository
     {
         private readonly AppDbContext _context;
@@ -21,12 +21,47 @@ namespace Infrastructure.Repositorty
         }
         public async Task<List<Users?>> PendingApprovedByAdminList()
         {
-            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient)&&q.IsApprovedByAdmin.Equals(AdminApproval.Pending)).ToListAsync();
+            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.Pending)).ToListAsync();
             return EmployeeDetailsList;
         }
+        public async Task<string?> RemoveNotApprovedEmployeeAsync(int employeeId)
+        {
+            if (employeeId == 0)
+                return null;
+
+            var employee = await _context.Users
+                .FirstOrDefaultAsync(q => q.UserId == employeeId &&
+                                          q.Role != UserRole.Patient &&
+                                          q.IsApprovedByAdmin == AdminApproval.NotApproved);
+
+            if (employee == null)
+                return null;
+
+            _context.Users.Remove(employee);
+            await _context.SaveChangesAsync();
+
+            return $"{employeeId} Employee removed successfully";
+        }
+        public async Task<string?> ApproveEmployeeRegistrationAsync(int employeeId, AdminApproval isApproved)
+        {
+            var employee = await _context.Users.FirstOrDefaultAsync(e => e.UserId == employeeId);
+
+            if (employee == null)
+                return null;
+
+            employee.IsApprovedByAdmin = isApproved;
+            await _context.SaveChangesAsync();
+
+            return isApproved == AdminApproval.Approved
+                ? $"{employee.UserId} is Approved by Admin"
+                : $"{employee.UserId} is Not Approved by Admin";
+        }
+
+
         public async Task<Users?> RetrieveEmpDetailsById(int EmployeeId)
         {
-            var EmployeeDetails = await _context.Users.FirstOrDefaultAsync(q => q.UserId==EmployeeId&&!q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.Pending));
+            var EmployeeDetails = await _context.Users.FirstOrDefaultAsync(q => q.UserId == EmployeeId && !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.Pending));
+
             return EmployeeDetails;
         }
         public async Task<List<Users?>> NotApprovedByAdminList()
@@ -44,7 +79,7 @@ namespace Infrastructure.Repositorty
         //    {
         //        _context.Users.Remove(EmployeeDetails);
         //        await _context.SaveChangesAsync();
-               
+
         //    }
         //    return EmployeeDetails;
 
@@ -55,54 +90,61 @@ namespace Infrastructure.Repositorty
             var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && q.Shift.Equals(ShiftTime.NotAllocated)).ToListAsync();
             return EmployeeDetailsList;
         }
-        public async Task<Users?> AllocateShiftforEmployees(int EmployeeId,ShiftTime shift)
+        public async Task<string?> AllocateShiftForEmployeeAsync(int employeeId, ShiftTime shift)
         {
-            var EmployeeDetails = await _context.Users.FirstOrDefaultAsync(q => !q.Role.Equals(UserRole.Patient) && q.UserId == EmployeeId&& q.Shift.Equals(ShiftTime.NotAllocated));
-            if (EmployeeDetails == null)
+            var employee = await _context.Users.FirstOrDefaultAsync(e => e.UserId == employeeId);
+
+            if (employee == null)
                 return null;
-            return EmployeeDetails;         
+
+            employee.Shift = shift;
+            await _context.SaveChangesAsync();
+
+            return $"{employeeId} shift is allocated by admin";
         }
+
+
         public async Task<List<Users?>> EmployeeList()
         {
             var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.Approved)).ToListAsync();
             return EmployeeDetailsList;
         }
         public List<Appointment> GetAppointmentsByDate(DateOnly date)
-            {
-                return _context.Appointments
-                               .Where(a => a.AppointmentDate == date)
-                               .ToList();
-            }
-        public int GetAppointmentCountByDate(DateOnly date)
-            {
-                return _context.Appointments
-                               .Count(a => a.AppointmentDate == date);
-            }
-        public List<Appointment> GetAppointmentsByMonth(int month, int year)
-            {
-                return _context.Appointments
-                               .Where(a => a.AppointmentDate.Month == month &&
-                                           a.AppointmentDate.Year == year)
-                               .ToList();
-            }
-        public int GetAppointmentCountByMonth(int month, int year)
-            {
-                return _context.Appointments
-                               .Count(a => a.AppointmentDate.Month == month &&
-                                           a.AppointmentDate.Year == year);
-            }
-        public List<Appointment> GetAppointmentsByYear(int year)
-            {
-                return _context.Appointments
-                               .Where(a => a.AppointmentDate.Year == year)
-                               .ToList();
-            }
-        public int GetAppointmentCountByYear(int year)
-            {
-                return _context.Appointments
-                               .Count(a => a.AppointmentDate.Year == year);
-            }
+        {
+            return _context.Appointments
+                           .Where(a => a.AppointmentDate == date)
+                           .ToList();
         }
-
+        public int GetAppointmentCountByDate(DateOnly date)
+        {
+            return _context.Appointments
+                           .Count(a => a.AppointmentDate == date);
+        }
+        public List<Appointment> GetAppointmentsByMonth(int month, int year)
+        {
+            return _context.Appointments
+                           .Where(a => a.AppointmentDate.Month == month &&
+                                       a.AppointmentDate.Year == year)
+                           .ToList();
+        }
+        public int GetAppointmentCountByMonth(int month, int year)
+        {
+            return _context.Appointments
+                           .Count(a => a.AppointmentDate.Month == month &&
+                                       a.AppointmentDate.Year == year);
+        }
+        public List<Appointment> GetAppointmentsByYear(int year)
+        {
+            return _context.Appointments
+                           .Where(a => a.AppointmentDate.Year == year)
+                           .ToList();
+        }
+        public int GetAppointmentCountByYear(int year)
+        {
+            return _context.Appointments
+                           .Count(a => a.AppointmentDate.Year == year);
+        }
     }
+
+}
 

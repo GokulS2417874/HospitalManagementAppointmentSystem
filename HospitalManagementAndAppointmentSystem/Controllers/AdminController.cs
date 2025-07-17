@@ -25,28 +25,17 @@ public class AdminController : Controller
         var EmployeeDetails = await _repo.PendingApprovedByAdminList();
         return Ok(EmployeeDetails);
     }
-        [HttpPut("RegistrationApproval")]
-        public async Task<IActionResult> ApprovedByAdmin(int EmployeeId, AdminApproval IsApproved)
-        {
-            var employee = await _repo.RetrieveEmpDetailsById(EmployeeId);
+    [HttpPut("RegistrationApproval")]
+    public async Task<IActionResult> ApprovedByAdmin(int EmployeeId, AdminApproval IsApproved)
+    {
+        var result = await _repo.ApproveEmployeeRegistrationAsync(EmployeeId, IsApproved);
 
-            if (employee == null)
-            {
-                return BadRequest("Employee not found");
-            }
+        if (result == null)
+            return BadRequest("Employee not found");
 
-            employee.IsApprovedByAdmin = IsApproved;
-            await _context.SaveChangesAsync();
+        return Ok(result);
+    }
 
-            if (IsApproved == AdminApproval.Approved)
-            {
-                return Ok($"{employee.UserId} is Approved by Admin");
-            }
-            else
-            {
-                return Ok($"{employee.UserId} is Not Approved by Admin");
-            }
-        }
 
     [HttpGet("NotApprovedList")]
     public async Task<IActionResult> NotApprovedEmployeesList()
@@ -54,52 +43,37 @@ public class AdminController : Controller
         var EmployeeDetails = await _repo.NotApprovedByAdminList();
         return Ok(EmployeeDetails);
     }
-        [HttpDelete("Delete-Not-Approved")]
-        public async Task<IActionResult> RemoveEmployee(int EmployeeId)
-        {
-            if (EmployeeId == 0)
-            {
-                return BadRequest($"{EmployeeId}Invalid Employee ID");
-            }
+    [HttpDelete("Delete-Not-Approved")]
+    public async Task<IActionResult> RemoveEmployee(int EmployeeId)
+    {
+       var result = await _repo.RemoveNotApprovedEmployeeAsync(EmployeeId);
 
-            var employee = await _context.Users
-                .FirstOrDefaultAsync(q => q.UserId == EmployeeId
-                    && q.Role != UserRole.Patient
-                    && q.IsApprovedByAdmin == AdminApproval.NotApproved);
+       if (result == null)
+           return NotFound($"{EmployeeId} Employee not found or already approved");
 
-            if (employee == null)
-            {
-                return NotFound($"{EmployeeId} Employee not found or already approved");
-            }
+       return Ok(result);
+     }
 
-            _context.Users.Remove(employee);
-            await _context.SaveChangesAsync();
 
-            return Ok($"{EmployeeId}Employee removed successfully");
+    [HttpPut("Allocate-Shift")]
+    public async Task<IActionResult> AllocateShifts(int EmployeeId, ShiftTime Shift)
+    {
+        var result = await _repo.AllocateShiftForEmployeeAsync(EmployeeId, Shift);
 
-        }
+        if (result == null)
+            return BadRequest("EmployeeId not found");
 
-        [HttpGet("ShiftNotAllocatedEmployeesList")]
+        return Ok(result);
+    }
+
+
+    [HttpGet("ShiftNotAllocatedEmployeesList")]
     public async Task<IActionResult> ShiftNotAllocatedList()
     {
         var EmployeeDetails = await _repo.ShiftNotAllocatedList();
         return Ok(EmployeeDetails);
     }
-    [HttpPut("Allocate-Shift")]
-    public async Task<IActionResult> AllocateShifts(int EmployeeId, ShiftTime Shift)
-    {
-        var EmployeeDetails = await _repo.AllocateShiftforEmployees(EmployeeId, Shift);
-            if (EmployeeDetails == null)
-            {
-                return BadRequest("EmployeeId not Found");
-            }
-            else
-            {
-                EmployeeDetails.Shift = Shift;
-            }
-        await _context.SaveChangesAsync();
-        return Ok($"{EmployeeId} shift is Allocated by admin");
-    }
+
     [HttpGet("EmployeesDetailsList")]
     public async Task<IActionResult> EmployeesList()
     {

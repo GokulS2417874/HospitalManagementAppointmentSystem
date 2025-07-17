@@ -104,10 +104,12 @@ namespace Infrastructure.Repositorty
             };
             var isAlreadyBooked = await _context.Appointments
                                                 .AnyAsync(a => (a.AppointmentDate == Today && a.PatientId == AppointmentDetails.PatientId));
+            var Appt = await _context.Appointments
+                                                .FirstOrDefaultAsync(a => (a.AppointmentDate == Today && a.PatientId == AppointmentDetails.PatientId));
             var isSlotAlreadyBooked = await _context.Appointments.AnyAsync(a => a.DoctorId == AppointmentDetails.DoctorId
                                                                       && a.AppointmentDate == Today
                                                                       && a.AppointmentStartTime == AppointmentDetails.AppointmentStartTime);
-            if (!isAlreadyBooked || AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.Cancelled) || AppointmentDetails.AppointmentStatus.Equals(AppointmentStatus.NotAttended))
+            if (!isAlreadyBooked || Appt.AppointmentStatus.Equals(AppointmentStatus.Cancelled) || Appt.AppointmentStatus.Equals(AppointmentStatus.NotAttended))
             {
                 if (!isSlotAlreadyBooked)
                 {
@@ -127,6 +129,55 @@ namespace Infrastructure.Repositorty
 
             
         }
+        public async Task<Appointment?> CancelAppointmentAsync(string email)
+        {
+            var appointment = await RetrieveAppointmentDetails(email);
+
+            if (appointment == null)
+                return null;
+
+            appointment.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
+            appointment.AppointmentStartTime = null;
+            appointment.AppointmentEndTime = null;
+            appointment.AppointmentStatus = AppointmentStatus.Cancelled;
+
+            await _context.SaveChangesAsync();
+            return appointment;
+        }
+        public async Task<Appointment?> RescheduleAppointmentAsync(string email, RescheduledDto dto)
+        {
+            var appointment = await RetrieveAppointmentDetails(email);
+
+            if (appointment == null)
+                return null;
+
+            appointment.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
+            appointment.AppointmentStartTime = dto.AppointmentStartTime;
+            appointment.AppointmentEndTime = dto.AppointmentEndTime;
+            appointment.AppointmentStatus = AppointmentStatus.Rescheduled;
+
+            await _context.SaveChangesAsync();
+            return appointment;
+        }
+        public async Task<string> UpdateAppointmentStatusAsync(int id, DoctorAppointmentUpdateDto dto)
+        {
+            var appointment = await _context.Appointments.FirstOrDefaultAsync(appointment=>appointment.AppointmentId==id);
+
+            if (appointment == null)
+                return "Patient not found.";
+
+            appointment.AppointmentStartTime = null;
+            appointment.AppointmentEndTime = null;
+
+            var now = TimeOnly.FromDateTime(DateTime.Now);
+            appointment.AppointmentStatus = dto.IsAttended && appointment.AppointmentEndTime > now
+                ? AppointmentStatus.Completed
+                :AppointmentStatus.NotAttended ;
+
+            await _context.SaveChangesAsync();
+            return "Appointment status updated.";
+        }
+
         public async Task<Appointment> RetrieveAppointmentDetails(string email)
         {
 
@@ -165,12 +216,22 @@ namespace Infrastructure.Repositorty
 
         }
 
-        public async Task<List<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId)
+        public async Task<List<Appointment>> GetAppointmentsForDoctorAsync(string email)
         {
-            return await _context.Appointments
-            .Where(a => a.DoctorId == doctorId)
-            .ToListAsync();
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            return await _context.Users
+                .Join(_context.Appointments,
+                      u => u.UserId,
+                      a => a.DoctorId,
+                      (u, a) => new { User = u, Appointment = a })
+                .Where(q => q.User.Email == email &&
+                            q.User.Role == UserRole.Doctor &&
+                            (q.Appointment.AppointmentStatus == AppointmentStatus.Scheduled))
+                .Select(q => q.Appointment)
+                .ToListAsync();
         }
+
 
         public async Task<List<Appointment>> GetAppointmentsByPatientIdAsync(int PatientId)
         {
@@ -187,29 +248,6 @@ namespace Infrastructure.Repositorty
                 .Where(a => a.DoctorId == doctorId && a.AppointmentDate == today)
                 .ToListAsync();
         }
-
-
-        //public async Task<(byte[] FilePath, string MimeType, string FileName)?> GetMedicalHistoryAsync(string email)
-        //{
-        //    var appointment = await _context.Appointments
-        //        .Join(_context.Users,
-        //         appointment => appointment.PatientId,
-        //         user => user.UserId,
-        //         (appointment, user) => new { appointment, user })
-        //        .Where(j => j.user.Email == email)
-        //        .Select(j => new
-        //        {
-        //            j.appointment.FilePath,
-        //            j.appointment.MimeType,
-        //            j.appointment.FileName
-        //        }).SingleOrDefaultAsync();
-
-        //    if (appointment == null || appointment.FilePath == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    return (appointment.FilePath, appointment.MimeType ?? "MedicalHistory/pdf", appointment.FileName ?? "MedicalHistory.pdf");
 
     }
 }
