@@ -130,7 +130,7 @@ namespace Infrastructure.Repositorty
         public async Task<Appointment> RetrieveAppointmentDetails(string email)
         {
 
-
+            var Today = DateOnly.FromDateTime(DateTime.Now);
             var appointmentDetails = await _context.Users
                 .Join(_context.Appointments,
                       u => u.UserId,
@@ -138,9 +138,9 @@ namespace Infrastructure.Repositorty
                       (u, a) => new { User = u, Appointment = a })
                 .Where(q => q.User.Email == email &&
                             q.User.Role == UserRole.Patient &&
-                            (q.Appointment.AppointmentStatus == AppointmentStatus.Scheduled || q.Appointment.AppointmentStatus == AppointmentStatus.Rescheduled))
+                            q.Appointment.AppointmentDate == Today)
                 .Select(q => q.Appointment)
-                .FirstOrDefaultAsync();
+                .ToList();
             return appointmentDetails;
 
 
