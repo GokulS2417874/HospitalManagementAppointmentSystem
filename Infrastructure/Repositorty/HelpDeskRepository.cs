@@ -80,7 +80,10 @@ namespace Infrastructure.Repositorty
                 Gender = form.Gender ?? PatientGender.Others,
                 Role = UserRole.Patient
             };
+
              _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            user.RegisteredBy = AppointmentType.HelpDesk;
             await _context.SaveChangesAsync();
             return user;
         }

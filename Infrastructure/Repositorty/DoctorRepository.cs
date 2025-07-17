@@ -61,7 +61,7 @@ namespace Infrastructure.Repositorty
 
         public async Task<IEnumerable<object>> GetDoctorsByNameAsync(string name)
         {
-            return await _context.Users.Where(d => d.UserName == name)
+            return await _context.Users.Where(d => d.UserName == name && d.Role == UserRole.Doctor)
                 .Select(d => new {
                     d.UserId,
                     d.UserName,

@@ -45,7 +45,7 @@ namespace Domain.Models
                 }
                 else
                 {
-                    return Shift.Equals(ShiftTime.Morning) ? new TimeOnly(13,0) :new TimeOnly(21,0);
+                    return Shift.Equals(ShiftTime.Afternoon) ? new TimeOnly(13,0) : Shift.Equals(ShiftTime.Night) ? new TimeOnly(21,0) : new TimeOnly(0 , 0);
                 }
             }
         }
@@ -60,10 +60,11 @@ namespace Domain.Models
                 }
                 else
                 {
-                    return Shift.Equals(ShiftTime.Morning) ? new TimeOnly(21,0) : new TimeOnly(5,0);
+                    return Shift.Equals(ShiftTime.Afternoon) ? new TimeOnly(21,0) : Shift.Equals(ShiftTime.Night) ? new TimeOnly(5, 0) : new TimeOnly(0, 0);
                 }
             }
-        }
+           }
+        
         public AppointmentType? RegisteredBy { get; set; } = AppointmentType.Self;
         public AdminApproval IsApprovedByAdmin { get; set; } = AdminApproval.Pending;
         public ICollection<Payment> Payments { get; set; }

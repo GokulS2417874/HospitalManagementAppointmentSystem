@@ -53,9 +53,9 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return NotFound("Patient is not Registered by HelpDesk");
 
             }
-            PatientDetails.RegisteredBy = AppointmentType.HelpDesk;
             
-            return Ok();
+            
+            return Ok(PatientDetails);
         }
 
     }

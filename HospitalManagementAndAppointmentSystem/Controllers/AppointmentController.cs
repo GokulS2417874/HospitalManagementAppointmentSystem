@@ -3,6 +3,7 @@ using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Web.Helpers;
 using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
@@ -42,73 +43,31 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             }
             
             }
+
         //[Authorize(Roles = "Patient")]
         [HttpPut("Reschedule")]
-        public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto,string Email)
+        public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto, string email)
         {
-            //var Email = User.Identity.Name;
-            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(Email);
-
-            if (AppointmentDetails == null)
-            {
+            var result = await _repo.RescheduleAppointmentAsync(email, dto);
+            if (result == null)
                 return BadRequest("Patient not found.");
-            }
-            else
-            {
-                AppointmentDetails.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
-                AppointmentDetails.AppointmentStartTime = dto.AppointmentStartTime;
-                AppointmentDetails.AppointmentEndTime = dto.AppointmentEndTime;
-                AppointmentDetails.AppointmentStatus = AppointmentStatus.Rescheduled;
-            }
-            await _context.SaveChangesAsync();
-            return Ok(AppointmentDetails);
+            return Ok(result);
         }
-        //[Authorize(Roles = "Patient")]
+
         [HttpPut("Cancelled")]
         public async Task<IActionResult> Cancelled([FromForm] CancelledDto dto)
         {
-            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(dto.Email);
-
-            if (AppointmentDetails == null)
-            {
+            var result = await _repo.CancelAppointmentAsync(dto.Email);
+            if (result == null)
                 return BadRequest("Patient not found.");
-            }
-            else
-            {
-                AppointmentDetails.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
-                AppointmentDetails.AppointmentStartTime = null;
-                AppointmentDetails.AppointmentEndTime = null;
-                AppointmentDetails.AppointmentStatus = AppointmentStatus.Cancelled;
-            }
-            await _context.SaveChangesAsync();
-            return Ok(AppointmentDetails);
-        }
-
-        [HttpPut("UpdateAppointmentStatus-NotAttended-NotCompleted")]
-        public async Task<IActionResult> UpdateAppointment(string Email,DoctorAppointmentUpdateDto dto)
-        {
-            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(Email);
-
-            if (AppointmentDetails == null)
-            {
-                return BadRequest("Patient not found.");
-            }
-            else
-            {
-                AppointmentDetails.AppointmentStartTime = null;
-                AppointmentDetails.AppointmentEndTime = null;
-                AppointmentDetails.AppointmentStatus = dto.IsAttended && AppointmentDetails.AppointmentEndTime > TimeOnly.FromDateTime(DateTime.Now) ? AppointmentStatus.Completed : (AppointmentDetails.AppointmentEndTime < TimeOnly.FromDateTime(DateTime.Now) ? AppointmentStatus.NotAttended : AppointmentDetails.AppointmentStatus);
-            }
-            await _context.SaveChangesAsync();
-            return Ok();
+            return Ok(result);
         }
 
 
-
-        [HttpGet("GetAppointmentsByDoctorId")]
-        public async Task<IActionResult> ViewAppointmentsForDoctor([FromQuery] int docId)
+        [HttpGet("GetAppointmentsForDoctor")]
+        public async Task<IActionResult> ViewAppointmentsForDoctor([FromQuery] string Email)
         {
-            var appointments = await _repo.GetAppointmentsByDoctorIdAsync(docId);
+            var appointments = await _repo.GetAppointmentsForDoctorAsync(Email);
 
             if (appointments == null || !appointments.Any())
             {
@@ -117,6 +76,18 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 
             return Ok(appointments);
         }
+
+
+        [HttpPut("UpdateAppointmentStatus-NotAttended-NotCompleted")]
+        public async Task<IActionResult> UpdateAppointment( [FromForm]int AppointmentId,[FromForm] DoctorAppointmentUpdateDto dto)
+        {
+            var result = await _repo.UpdateAppointmentStatusAsync(AppointmentId, dto);
+            if (result == "Patient not found.")
+                return BadRequest(result);
+            return Ok(result);
+        }
+
+
 
         [HttpGet("GetAppointmentsByPatientId")]
         public async Task<IActionResult> ViewAppointmentsForPatient([FromQuery]int PatId)
