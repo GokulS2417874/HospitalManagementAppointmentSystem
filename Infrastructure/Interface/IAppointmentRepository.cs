@@ -9,14 +9,21 @@ namespace Infrastructure.Interface
     public interface IAppointmentRepository
     {
         Task<List<SlotWithDoctorDto>> GenerateDoctorSlots(specialization specialization, ShiftTime shift);
-        Task<Appointment> BookAppointment(AppointmentDto dto, specialization specialization, string email);
+
+        Task<object> BookAppointment(AppointmentDto dto, specialization specialization, string email,ShiftTime shift);
+
+        Task<List<Appointment>> GetAppointmentsForDoctorAsync(string email);
+
+        Task<Appointment?> RescheduleAppointmentAsync(string email, RescheduledDto dto);
+        Task<Appointment?> CancelAppointmentAsync(string email);
+        Task<string> UpdateAppointmentStatusAsync(int AppointmentId, DoctorAppointmentUpdateDto dto);
+  
+
         Task<Appointment> RetrieveAppointmentDetails(string Email);
 
         Task<(byte[] FilePath, string MimeType, string FileName)?> GetPatientMedicalHistoryAsync(int patientId);
 
         // Task<(byte[] FilePath, string MimeType, string FileName)?> GetMedicalHistoryAsync(string email);
-
-        Task<List<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId);
 
         Task<List<Appointment>> GetAppointmentsByPatientIdAsync(int doctorId);
 

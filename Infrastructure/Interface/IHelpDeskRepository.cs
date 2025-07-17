@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Infrastructure.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Infrastructure.Interface
         Task<IEnumerable<object>> GetAllHelpDeskAsync();
         Task<object> GetHelpDeskByIdAsync(int id);
         Task<IEnumerable<object>> GetHelpDeskByNameAsync(string name);
+        Task<Users> RegistrationDoneByHelpDesk(GenericRegistrationForm form);
       //  Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization);
     }
 }

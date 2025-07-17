@@ -1,9 +1,6 @@
 ﻿using Domain.Data;
-using Domain.Models;
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
-using Infrastructure.Repositorty;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Helpers;
@@ -11,7 +8,9 @@ using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
-    public class AppointmentController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentRepository _repo;
         private readonly AppDbContext _context;
@@ -20,15 +19,6 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             _repo = repo;
             _context = context;
         }
-        [HttpPut("ActiveStatus")]
-        public async Task<IActionResult> UpdateActiveStatus(string Email)
-        {
-            var DoctorDetails = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email);
-            DoctorDetails.Active_Status = Status.Online;
-            await _context.SaveChangesAsync();
-            return Ok("Updated");
-        }
-
         [HttpGet("ListOfDoctors")]
         public async Task<IActionResult> DoctorsList(specialization specialization,ShiftTime Shift)
         {
@@ -39,78 +29,45 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         }
         //[Authorize(Roles = "Patient")]
         [HttpPost("BookAppointment")]
-        public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email)
+        public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email,ShiftTime shift)
         {
-            var AppointmentDetails = await _repo.BookAppointment(dto, specialization, Email);
-            return Ok(AppointmentDetails);
-        }
-        //[Authorize(Roles = "Patient")]
-        [HttpPut("Reschedule")]
-        public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto,string Email)
-        {
-            //var Email = User.Identity.Name;
-            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(Email);
-
-            if (AppointmentDetails == null)
+            var Today = DateOnly.FromDateTime(DateTime.Today);
+            var AppointmentDetails = await _repo.BookAppointment(dto, specialization, Email,shift);
+            if(AppointmentDetails is string message)
             {
-                return BadRequest("Patient not found.");
+                return BadRequest(message);
             }
             else
             {
-                AppointmentDetails.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
-                AppointmentDetails.AppointmentStartTime = dto.AppointmentStartTime;
-                AppointmentDetails.AppointmentEndTime = dto.AppointmentEndTime;
-                AppointmentDetails.AppointmentStatus = AppointmentStatus.Rescheduled;
+                return Ok(AppointmentDetails);
             }
-            await _context.SaveChangesAsync();
-            return Ok(AppointmentDetails);
-        }
+            
+            }
+
         //[Authorize(Roles = "Patient")]
+        [HttpPut("Reschedule")]
+        public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto, string email)
+        {
+            var result = await _repo.RescheduleAppointmentAsync(email, dto);
+            if (result == null)
+                return BadRequest("Patient not found.");
+            return Ok(result);
+        }
+
         [HttpPut("Cancelled")]
         public async Task<IActionResult> Cancelled([FromForm] CancelledDto dto)
         {
-            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(dto.Email);
-
-            if (AppointmentDetails == null)
-            {
+            var result = await _repo.CancelAppointmentAsync(dto.Email);
+            if (result == null)
                 return BadRequest("Patient not found.");
-            }
-            else
-            {
-                AppointmentDetails.AppointmentDate = DateOnly.FromDateTime(DateTime.Today);
-                AppointmentDetails.AppointmentStartTime = null;
-                AppointmentDetails.AppointmentEndTime = null;
-                AppointmentDetails.AppointmentStatus = AppointmentStatus.Cancelled;
-            }
-            await _context.SaveChangesAsync();
-            return Ok(AppointmentDetails);
-        }
-
-        [HttpPut("UpdateAppointmentStatus")]
-        public async Task<IActionResult> UpdateAppointment(string Email,DoctorAppointmentUpdateDto dto)
-        {
-            var AppointmentDetails = await _repo.RetrieveAppointmentDetails(Email);
-
-            if (AppointmentDetails == null)
-            {
-                return BadRequest("Patient not found.");
-            }
-            else
-            {
-                AppointmentDetails.AppointmentStartTime = null;
-                AppointmentDetails.AppointmentEndTime = null;
-                AppointmentDetails.AppointmentStatus = dto.IsAttended && AppointmentDetails.AppointmentEndTime > TimeOnly.FromDateTime(DateTime.Now) ? AppointmentStatus.Completed : (AppointmentDetails.AppointmentEndTime < TimeOnly.FromDateTime(DateTime.Now) ? AppointmentStatus.NotAttended : AppointmentDetails.AppointmentStatus);
-            }
-            await _context.SaveChangesAsync();
-            return Ok();
+            return Ok(result);
         }
 
 
-
-        [HttpGet("GetAppointmentsByDoctorId")]
-        public async Task<IActionResult> ViewAppointmentsForDoctor([FromQuery] int docId)
+        [HttpGet("GetAppointmentsForDoctor")]
+        public async Task<IActionResult> ViewAppointmentsForDoctor([FromQuery] string Email)
         {
-            var appointments = await _repo.GetAppointmentsByDoctorIdAsync(docId);
+            var appointments = await _repo.GetAppointmentsForDoctorAsync(Email);
 
             if (appointments == null || !appointments.Any())
             {
@@ -120,8 +77,20 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(appointments);
         }
 
+
+        [HttpPut("UpdateAppointmentStatus-NotAttended-NotCompleted")]
+        public async Task<IActionResult> UpdateAppointment( [FromForm]int AppointmentId,[FromForm] DoctorAppointmentUpdateDto dto)
+        {
+            var result = await _repo.UpdateAppointmentStatusAsync(AppointmentId, dto);
+            if (result == "Patient not found.")
+                return BadRequest(result);
+            return Ok(result);
+        }
+
+
+
         [HttpGet("GetAppointmentsByPatientId")]
-        public async Task<IActionResult> ViewAppointmentsForPatient([FromQuery] int PatId)
+        public async Task<IActionResult> ViewAppointmentsForPatient([FromQuery]int PatId)
         {
             var appointments = await _repo.GetAppointmentsByPatientIdAsync(PatId);
 
@@ -162,22 +131,6 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(appointments);
         }
 
-            //[HttpGet("Getmedical-history")]
-            //public async Task<IActionResult> GetMedicalHistory(string email)
-            //{
-            //    var result = await _repo.GetMedicalHistoryAsync(email);
-
-            //    if (result == null)
-            //        return NotFound("No Medical History");
-
-            //    return File(
-            //    fileContents: result.Value.FilePath,
-            //    contentType: result.Value.MimeType,
-            //    fileDownloadName: result.Value.FileName
-            //    );
-
-            //}
-
         }
     }
 //if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
@@ -210,3 +163,18 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 //                //{
 //                //    return BadRequest("Appointment Must be Scheduled Between 9AM AND 5PM");
 //                //}
+//[HttpGet("Getmedical-history")]
+//public async Task<IActionResult> GetMedicalHistory(string email)
+//{
+//    var result = await _repo.GetMedicalHistoryAsync(email);
+
+//    if (result == null)
+//        return NotFound("No Medical History");
+
+//    return File(
+//    fileContents: result.Value.FilePath,
+//    contentType: result.Value.MimeType,
+//    fileDownloadName: result.Value.FileName
+//    );
+
+//}

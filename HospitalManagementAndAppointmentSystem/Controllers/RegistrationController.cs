@@ -60,10 +60,12 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     EmergencyContactName = form.EmergencyContactName,
                     EmergencyContactRelationship = form.EmergencyContactRelationship,
                     EmergencyContactPhoneNumber = form.EmergencyContactPhoneNumber,
+                    DateOfBirth = form.DateOfBirth,
+                    Gender = form.Gender ?? PatientGender.Others,
                     Specialization = form.Specialization,
                     Qualification = form.Qualification,
                     ExperienceYears = form.ExperienceYears ?? 0,
-                    Shift = form.Shift,
+                    //Shift = form.Shift,
                     Role = UserRole.Doctor
                 },
 
@@ -78,7 +80,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     EmergencyContactPhoneNumber = form.EmergencyContactPhoneNumber,
                     DateOfBirth = form.DateOfBirth,
                     Gender = form.Gender ?? PatientGender.Others,
-                    AppointmentBookedBy = form.AppointmentBookedBy ?? AppointmentType.Self,
+                   // RegisteredBy = form.RegisteredBy ?? AppointmentType.Self,
                     Role = UserRole.Patient
                 },
 
@@ -91,6 +93,8 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     EmergencyContactName = form.EmergencyContactName,
                     EmergencyContactRelationship = form.EmergencyContactRelationship,
                     EmergencyContactPhoneNumber = form.EmergencyContactPhoneNumber,
+                    DateOfBirth = form.DateOfBirth,
+                    Gender = form.Gender ?? PatientGender.Others,
                     Languages = form.Languages,
                     Qualification = form.Qualification,
                     Role = UserRole.HelpDesk

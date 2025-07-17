@@ -51,8 +51,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             var payments = await _paymentRepo.GetPaymentsByAppointmentAsync(appointmentId);
             return Ok(payments);
         }
-
-            }
-        }
+     }
+ }
     
 

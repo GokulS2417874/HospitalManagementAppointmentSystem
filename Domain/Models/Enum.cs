@@ -13,7 +13,8 @@ namespace Domain.Models
         {
             Online,
             Busy,
-            Offline
+            Offline,
+            Not_Available
         }
         public enum PatientGender
         {
@@ -40,7 +41,8 @@ namespace Domain.Models
         {
             Morning,
             Afternoon,
-            Night
+            Night,
+            NotAllocated
         }
         public enum AppointmentStatus
         {
@@ -130,8 +132,19 @@ namespace Domain.Models
             Mg_1000 = 512
         }
 
+        public enum SlotStatus
+        {
+            Not_Available,
+            Busy,
+            Available
+        }
+        public enum AdminApproval
+        {
+            Pending,
+            Approved,
+            NotApproved
+        }
 
     }
 
 }
-

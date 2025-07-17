@@ -13,7 +13,7 @@ namespace Infrastructure.DTOs
         public TimeOnly? EndTime { get; set; }
         public ShiftTime? Shift { get; set; }
         public bool IsBooked { get; set; } = false;
-        public Status Status { get; set; }
+        public SlotStatus Status { get; set; }
             //get
             //{
             //    var now = TimeOnly.FromDateTime(DateTime.Now);
