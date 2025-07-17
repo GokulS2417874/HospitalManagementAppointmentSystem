@@ -14,7 +14,7 @@ namespace Domain.Models
         public DateOnly AppointmentDate { get; set; } 
         public TimeOnly? AppointmentStartTime { get; set; }
         public TimeOnly? AppointmentEndTime { get; set; }
-        public AppointmentStatus? AppointmentStatus { get; set; } = Enum.AppointmentStatus.InProgress;
+        public AppointmentStatus? AppointmentStatus { get; set; } 
         public byte[]? FilePath { get; set; }
         public string? FileName { get; set; }
         public string? MimeType { get; set; }

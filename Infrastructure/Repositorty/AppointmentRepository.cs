@@ -97,7 +97,7 @@ namespace Infrastructure.Repositorty
                 AppointmentDate = DateOnly.FromDateTime(DateTime.Today),
                 AppointmentStartTime = dto.AppointmentStartTime,
                 AppointmentEndTime = dto.AppointmentEndTime,
-                AppointmentStatus = dto.Submit ? AppointmentStatus.Scheduled : AppointmentStatus.InProgress,
+                AppointmentStatus = AppointmentStatus.Scheduled ,
                 FilePath = filebytes,
                 FileName = dto.FilePath?.FileName,
                 MimeType = dto.FilePath?.ContentType,
