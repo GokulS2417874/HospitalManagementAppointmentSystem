@@ -30,7 +30,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(Result);
 
         }
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = "Admin,Patient")]
         [HttpPost("BookAppointment")]
         public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email,ShiftTime shift)
         {
@@ -47,7 +47,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             
             }
 
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = "Admin,Patient")]
         [HttpPut("Reschedule")]
         public async Task<IActionResult> Reschedule([FromForm] RescheduledDto dto, string email)
         {
@@ -56,7 +56,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return BadRequest("Patient not found.");
             return Ok(result);
         }
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = "Admin,Patient")]
 
         [HttpPut("Cancelled")]
         public async Task<IActionResult> Cancelled([FromForm] string Email)
@@ -123,7 +123,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             fileDownloadName: result.Value.FileName
             );
         }
-        [Authorize(Roles = "Doctor")]
+        [Authorize(Roles = "Admin,Doctor")]
 
         [HttpGet("Today-AppointmentsForDoctor")]
         public async Task<IActionResult> GetTodayAppointmentsForDoctor(int doctorId)

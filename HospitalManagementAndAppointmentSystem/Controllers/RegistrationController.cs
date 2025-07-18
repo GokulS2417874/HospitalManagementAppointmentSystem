@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using static Domain.Models.Enum;
 using Enum = Domain.Models.Enum;
 
+
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
     [Route("api/[controller]")]

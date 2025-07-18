@@ -7,13 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static Domain.Models.Enum;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
 
     [Route("api/[controller]")]
     [ApiController]
-    
+    [Authorize(Roles = "Doctor,Patient,Admin,HelpDesk")]
+
     public class UpdateProfileController : ControllerBase
     {
         private readonly IUserRepository _userRepository;

@@ -47,7 +47,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             var doctors = await _helpdeskRepo.GetHelpDeskByIdAsync(id);
             return Ok(doctors);
         }
-        [Authorize(Roles = "HelpDesk")]
+        [Authorize(Roles = "Admin,HelpDesk")]
 
         [HttpPost("RegistrationByHelpDisk")]
         public async Task<IActionResult> RegistrationByHelpDesk([FromForm] GenericRegistrationForm form)
