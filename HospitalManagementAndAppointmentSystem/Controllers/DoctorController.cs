@@ -45,7 +45,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(doctors);
         }
 
-        [Authorize(Roles = "Admin,HelpDesk")]
+        [Authorize(Roles = "Admin,Patient,HelpDesk")]
 
         [HttpGet("GetDoctorsBySpecialization")]
         public async Task<IActionResult> GetDoctorsBySpecialization([FromQuery] specialization  Specializaition)

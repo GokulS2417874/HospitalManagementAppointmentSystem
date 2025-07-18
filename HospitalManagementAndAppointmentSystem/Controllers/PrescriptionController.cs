@@ -16,7 +16,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         {
             _repository = repository;
         }
-        [Authorize(Roles = "Doctor")]
+        [Authorize(Roles = "Admin,Doctor")]
         [HttpPost("AddPrescription")]
         public async Task<IActionResult> AddPrescription([FromForm] PrescriptionDto dto)
         {

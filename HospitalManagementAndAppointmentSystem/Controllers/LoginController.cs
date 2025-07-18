@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Web.Helpers;
 
+
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class LoginController : Controller
     {
         private readonly IAuthRepository _repo;
