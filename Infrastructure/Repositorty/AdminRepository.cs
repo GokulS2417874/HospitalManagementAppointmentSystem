@@ -21,7 +21,7 @@ namespace Infrastructure.Repositorty
         }
         public async Task<List<Users?>> PendingApprovedByAdminList()
         {
-            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.Pending)).ToListAsync();
+            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.IsApprovedByAdmin.Equals(AdminApproval.Pending)).ToListAsync();
             return EmployeeDetailsList;
         }
         public async Task<string?> RemoveNotApprovedEmployeeAsync(int employeeId)
@@ -32,6 +32,7 @@ namespace Infrastructure.Repositorty
             var employee = await _context.Users
                 .FirstOrDefaultAsync(q => q.UserId == employeeId &&
                                           q.Role != UserRole.Patient &&
+                                          !q.Role.Equals(UserRole.Admin) &&
                                           q.IsApprovedByAdmin == AdminApproval.NotApproved);
 
             if (employee == null)
@@ -60,13 +61,13 @@ namespace Infrastructure.Repositorty
 
         public async Task<Users?> RetrieveEmpDetailsById(int EmployeeId)
         {
-            var EmployeeDetails = await _context.Users.FirstOrDefaultAsync(q => q.UserId == EmployeeId && !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.Pending));
+            var EmployeeDetails = await _context.Users.FirstOrDefaultAsync(q => q.UserId == EmployeeId && !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.IsApprovedByAdmin.Equals(AdminApproval.Pending));
 
             return EmployeeDetails;
         }
         public async Task<List<Users?>> NotApprovedByAdminList()
         {
-            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.NotApproved)).ToListAsync();
+            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.IsApprovedByAdmin.Equals(AdminApproval.NotApproved)).ToListAsync();
             return EmployeeDetailsList;
         }
         //public async Task<Users> RemoveEmployee(int EmployeeId)
@@ -87,7 +88,7 @@ namespace Infrastructure.Repositorty
         //}
         public async Task<List<Users?>> ShiftNotAllocatedList()
         {
-            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && q.Shift.Equals(ShiftTime.NotAllocated)).ToListAsync();
+            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.Shift.Equals(ShiftTime.NotAllocated)).ToListAsync();
             return EmployeeDetailsList;
         }
         public async Task<string?> AllocateShiftForEmployeeAsync(int employeeId, ShiftTime shift)
@@ -106,7 +107,7 @@ namespace Infrastructure.Repositorty
 
         public async Task<List<Users?>> EmployeeList()
         {
-            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.Approved)).ToListAsync();
+            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.IsApprovedByAdmin.Equals(AdminApproval.Approved)).ToListAsync();
             return EmployeeDetailsList;
         }
         public List<Appointment> GetAppointmentsByDate(DateOnly date)
