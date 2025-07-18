@@ -57,7 +57,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
              }
             return Ok(doctors);
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Doctor,HelpDesk")]
         [HttpPut("ActiveStatus")]
         public async Task<IActionResult> UpdateActiveStatus(string Email,Status status)
         {
