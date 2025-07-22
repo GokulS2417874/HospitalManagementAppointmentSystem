@@ -1,14 +1,9 @@
-﻿using Domain.Data;
-using Domain.Models;
-using Infrastructure.DTOs;
+﻿using Infrastructure.DTOs;
 using Infrastructure.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static Domain.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
-
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Interface;
+﻿using Infrastructure.Interface;
 using Domain.Models;
 using Domain.Data;
 using static Domain.Models.Enum;
@@ -70,22 +65,7 @@ namespace Infrastructure.Repositorty
             var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.IsApprovedByAdmin.Equals(AdminApproval.NotApproved)).ToListAsync();
             return EmployeeDetailsList;
         }
-        //public async Task<Users> RemoveEmployee(int EmployeeId)
-        //{
-
-        //    var EmployeeDetails = await _context.Users.FirstAsync(q => q.UserId == EmployeeId && !q.Role.Equals(UserRole.Patient) && q.IsApprovedByAdmin.Equals(AdminApproval.NotApproved));
-        //   // Console.WriteLine($"Found Employee: {EmployeeDetails?.UserId}, Role: {EmployeeDetails?.Role}, Approved: {EmployeeDetails?.IsApprovedByAdmin}");
-
-        //    if (EmployeeDetails != null)
-        //    {
-        //        _context.Users.Remove(EmployeeDetails);
-        //        await _context.SaveChangesAsync();
-
-        //    }
-        //    return EmployeeDetails;
-
-
-        //}
+        
         public async Task<List<Users?>> ShiftNotAllocatedList()
         {
             var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.Shift.Equals(ShiftTime.NotAllocated)).ToListAsync();

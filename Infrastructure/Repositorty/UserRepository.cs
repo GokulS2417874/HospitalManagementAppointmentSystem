@@ -18,7 +18,6 @@ namespace Infrastructure.Repository
             _context = context;
             _hash = hash;
         }
-
         public async Task<string> UpdateUserProfileAsync(string email, GenericRegistrationForm dto)
         {
             var user = await _context.Users
@@ -55,7 +54,6 @@ namespace Infrastructure.Repository
                 //if (dto.Shift.HasValue)
                 //    user.Shift = dto.Shift;
             }
-
             if (user.Role == UserRole.Patient)
             {
                 if (!string.IsNullOrWhiteSpace(dto.Languages))
@@ -83,7 +81,6 @@ namespace Infrastructure.Repository
 
             return "User deleted successfully.";
         }
-         
         public async Task<ICollection<Users>> GetAllUsersAsync()
         
         {

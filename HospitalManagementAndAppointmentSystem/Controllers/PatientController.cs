@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static Domain.Models.Enum;
 using Microsoft.AspNetCore.Authorization;

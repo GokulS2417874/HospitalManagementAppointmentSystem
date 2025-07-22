@@ -2,13 +2,7 @@
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using static Domain.Models.Enum;
-using Enum = Domain.Models.Enum;
 
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
@@ -81,7 +75,6 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     EmergencyContactPhoneNumber = form.EmergencyContactPhoneNumber,
                     DateOfBirth = form.DateOfBirth,
                     Gender = form.Gender ?? PatientGender.Others,
-                   // RegisteredBy = form.RegisteredBy ?? AppointmentType.Self,
                     Role = UserRole.Patient
                 },
 

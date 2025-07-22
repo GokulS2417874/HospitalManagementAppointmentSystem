@@ -1,6 +1,5 @@
 ﻿using Infrastructure.DTOs;
 using Infrastructure.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 

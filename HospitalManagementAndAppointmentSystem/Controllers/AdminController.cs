@@ -1,9 +1,6 @@
 ﻿using Domain.Data;
-using Domain.Models;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using static Domain.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
 
@@ -15,11 +12,9 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 [Authorize(Roles = "Admin")]
     public class AdminController : Controller
 {
-    private readonly AppDbContext _context;
     private readonly IAdminRepository _repo;
     public AdminController(AppDbContext context, IAdminRepository repo)
     {
-        _context = context;
         _repo = repo;
     }
     [HttpGet("PendingEmployeesDetailsList")]

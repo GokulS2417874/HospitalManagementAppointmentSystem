@@ -1,12 +1,11 @@
 ﻿using Domain.Data;
-using Domain.Models;
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using static Domain.Models.Enum;
 using Microsoft.AspNetCore.Authorization;
+
 
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
@@ -16,12 +15,10 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
     public class HelpDeskController : ControllerBase
     {
         private readonly IHelpDeskRepository _helpdeskRepo;
-        private readonly AppDbContext _context;
 
         public HelpDeskController(IHelpDeskRepository helpdeskRepo,AppDbContext context)
         {
             _helpdeskRepo = helpdeskRepo;
-            _context = context;
         }
         [Authorize(Roles = "Admin,HelpDesk")]
         [HttpGet("GetAllHelpDesk")]

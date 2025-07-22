@@ -2,12 +2,6 @@
 using Domain.Models;
 using Infrastructure.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Helpers;
 using static Domain.Models.Enum;
 
 namespace Infrastructure.Repositorty

@@ -11,7 +11,6 @@ namespace Infrastructure.Interface
     public interface IPayementRepository
     {
         Task<Payment> CreatePaymentAsync(CreatePaymentDto dto);
-
         Task<List<Payment>> GetPaymentsByAppointmentAsync(int appointmentId);
     }
 }

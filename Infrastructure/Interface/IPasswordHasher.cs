@@ -9,9 +9,6 @@ namespace Infrastructure.Interface
     public interface IPasswordHasher
     {
         string Hash(string plainn);
-
         public bool Verify(string InputPassword, string HashPassword);
-        
-
     }
 }

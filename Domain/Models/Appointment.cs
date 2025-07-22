@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Domain.Models.Enum;
+﻿using static Domain.Models.Enum;
 
 namespace Domain.Models
 {

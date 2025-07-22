@@ -3,11 +3,6 @@ using Domain.Models;
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Domain.Models.Enum;
 
 namespace Infrastructure.Repositorty
@@ -38,7 +33,7 @@ namespace Infrastructure.Repositorty
                 Medication = combinedMedication,
                 Dosage = dto.Dosage,
                 Instructions = dto.Instructions,
-                
+
             };
 
             _context.Prescriptions.Add(prescription);
@@ -104,12 +99,5 @@ namespace Infrastructure.Repositorty
                 ScheduleTime = pres.ScheduleTime
             };
         }
-
-
-        //public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int PerscriptionId)
-        //{
-        //    var prescription = await _context.Prescriptions.FirstOrDefaultAsync(p => p.PrescriptionId = PerscriptionId);
-        //}
     }
 }
-

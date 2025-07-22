@@ -3,11 +3,7 @@ using Domain.Models;
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure.Repositorty
 {
@@ -19,7 +15,6 @@ namespace Infrastructure.Repositorty
         {
             _context = context;
         }
-
         public async Task<Payment> CreatePaymentAsync(CreatePaymentDto dto)
         {
             var appointment = await _context.Appointments.FindAsync(dto.AppointmentId);
@@ -44,7 +39,6 @@ namespace Infrastructure.Repositorty
 
             return payment;
         }
-
         public async Task<List<Payment>> GetPaymentsByAppointmentAsync(int appointmentId)
         {
             return await _context.Payments.Where(a => a.AppointmentId == appointmentId).ToListAsync();
