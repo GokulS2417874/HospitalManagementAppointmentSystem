@@ -15,6 +15,5 @@ namespace Infrastructure.Interface
         Task<object> GetHelpDeskByIdAsync(int id);
         Task<IEnumerable<object>> GetHelpDeskByNameAsync(string name);
         Task<Users> RegistrationDoneByHelpDesk(GenericRegistrationForm form);
-      //  Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization);
     }
 }

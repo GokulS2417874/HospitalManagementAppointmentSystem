@@ -2,8 +2,6 @@
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Web.Helpers;
 using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
@@ -13,11 +11,9 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentRepository _repo;
-        private readonly AppDbContext _context;
         public AppointmentController(IAppointmentRepository repo, AppDbContext context)
         {
             _repo = repo;
-            _context = context;
         }
         [HttpGet("ListOfDoctors")]
         public async Task<IActionResult> DoctorsList(specialization specialization,ShiftTime Shift)
@@ -133,48 +129,3 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 
         }
     }
-//if (!System.Enum.TryParse<specialization>(specialization.ToString(), true, out var Specialization))
-//        return BadRequest("Invalid Specialization");
-//    var DoctorDetails = _context.Users.Where(x => x.Role.Equals(UserRole.Doctor) && x.Specialization.Equals(specialization)&&x.Active_Status.Equals(Status.Online))
-//                                                   .GroupBy(x => x.Specialization)
-//                                                   .Select(group => new
-//                                                   {
-//                                                       Specialization = group.Key,
-//                                                       Doctors = group.OrderByDescending(x => x.UserName)
-//                                                   .Select(x => new DoctorDto
-//                                                   {
-//                                                       DoctorId = x.UserId,
-//                                                       DoctorName = x.UserName,
-//                                                       //Specialization = Specialization.ToString()
-//                                                   }).ToList()
-//                                                   }).ToList();
-//var OpeningTime = new TimeOnly(9, 0, 0);
-//var ClosingTime = new TimeOnly(17, 0, 0);
-//if (dto.AppointmentTime < OpeningTime || dto.AppointmentTime > ClosingTime)
-//{
-//    return BadRequest("Appointment Must be Scheduled Between 9AM AND 5PM");
-//}
-//else
-//{
-//}
-//                //var OpeningTime = new TimeOnly(9, 0, 0);
-//                //var ClosingTime = new TimeOnly(17, 0, 0);
-//                //if (dto.AppointmentTime < OpeningTime || dto.AppointmentTime > ClosingTime)
-//                //{
-//                //    return BadRequest("Appointment Must be Scheduled Between 9AM AND 5PM");
-//                //}
-//[HttpGet("Getmedical-history")]
-//public async Task<IActionResult> GetMedicalHistory(string email)
-//{
-//    var result = await _repo.GetMedicalHistoryAsync(email);
-
-//    if (result == null)
-//        return NotFound("No Medical History");
-
-//    return File(
-//    fileContents: result.Value.FilePath,
-//    contentType: result.Value.MimeType,
-//    fileDownloadName: result.Value.FileName
-//    );
-
-//}

@@ -1,6 +1,4 @@
-﻿using Domain;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models
 {
@@ -8,7 +6,6 @@ namespace Domain.Models
     {
         [Key]
         public int UserId { get; set; }
-      
         public string? UserName { get; set; }
         [Required]
         [MaxLength(100)]
@@ -64,7 +61,6 @@ namespace Domain.Models
                 }
             }
            }
-        
         public AppointmentType? RegisteredBy { get; set; } = AppointmentType.Self;
         public AdminApproval IsApprovedByAdmin { get; set; } = AdminApproval.Pending;
         public ICollection<Payment> Payments { get; set; }

@@ -1,9 +1,6 @@
 ﻿using Domain.Data;
 using Infrastructure.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Web.Helpers;
 using static Domain.Models.Enum;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers

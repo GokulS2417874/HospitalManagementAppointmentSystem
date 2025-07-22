@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Domain.Models.Enum;
+﻿using static Domain.Models.Enum;
 
 namespace Domain.Models
 {
@@ -15,7 +10,5 @@ namespace Domain.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public int AppointmentId { get; set; }
         
-
     }
-
 }

@@ -2,8 +2,6 @@
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Web.Helpers;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {

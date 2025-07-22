@@ -16,5 +16,4 @@ namespace Infrastructure.Interface
         Task<Users?> FindByResetTokenAsync(string token);
         Task<Users?> GetAdminAsync();
     }
-
 }

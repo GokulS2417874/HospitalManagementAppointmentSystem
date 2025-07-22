@@ -1,10 +1,5 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Data
 {
@@ -14,10 +9,6 @@ namespace Domain.Data
         {
         }
         public DbSet<Users>  Users{ get; set; }
-        //public DbSet<Admin> Admins { get; set; }
-        //public DbSet<Patient> Patients {  get; set; }   
-        //public DbSet<Doctor> Doctors { get; set; }
-        //public DbSet<HelpDesk> HelpDesks { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Prescription> Prescriptions { get; set; }

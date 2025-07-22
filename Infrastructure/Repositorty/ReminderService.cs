@@ -3,11 +3,7 @@ using Infrastructure.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure.Repositorty
 {
@@ -41,8 +37,6 @@ namespace Infrastructure.Repositorty
             //               .Include(a => a.Patient)
             //               .Where(a => !a.IsReminderSent && a.AppointmentDateTime > DateTime.Now && a.AppointmentDateTime <= DateTime.Now.AddHours(2))
             //               .ToListAsync();
-
-
 
             var upcoming = await (from a in db.Appointments
                                   join p in db.Users on a.PatientId equals p.UserId

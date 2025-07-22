@@ -9,8 +9,6 @@ using static Domain.Models.Enum;
 
 namespace Infrastructure.Interface
 {
-
-
     public interface IDoctorRepository
     {
         Task<IEnumerable<object>> GetAllDoctorsAsync();
@@ -18,9 +16,7 @@ namespace Infrastructure.Interface
         Task<IEnumerable<object>> GetDoctorsByNameAsync(string name);
         Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization);
         Task<Users> UpdateActiveStatus(string email, Status Status);
-
-      //  Task<List<Appointment>> GetAppointmentsByDoctorIdAsync(int doctorId);
     }
-    }
+}
 
 
