@@ -1,5 +1,7 @@
 ﻿using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
+using static Domain.Models.Enum;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -13,7 +15,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         {
             _patientRepo = patientRepo;
         }
-
+        [Authorize(Roles = "Admin,Doctor,HelpDesk")]
         [HttpGet("GetAllPatient")]
 
         public async Task<IActionResult> GetAllPatient()
@@ -21,7 +23,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             var patient = await _patientRepo.GetAllPatientsAsync();
             return Ok(patient);
         }
-
+        [Authorize(Roles = "Admin,Doctor,HelpDesk")]
         [HttpGet("GetPatientByName")]
         public async Task<IActionResult> GetPatientsByName(string name)
         {
@@ -32,7 +34,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             }
             return Ok(patient);
         }
-
+        [Authorize(Roles = "Admin,Doctor,Patient,HelpDesk")]
         [HttpGet("GetPatientById")]
         public async Task<IActionResult> GetPatientsById(int id)
         {

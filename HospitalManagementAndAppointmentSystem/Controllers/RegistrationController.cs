@@ -4,6 +4,7 @@ using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
 using static Domain.Models.Enum;
 
+
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
     [Route("api/[controller]")]

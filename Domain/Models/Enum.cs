@@ -39,7 +39,7 @@
         }
         public enum AppointmentStatus
         {
-            InProgress,
+           // InProgress,
             Scheduled,
             Cancelled,
             Completed,

@@ -3,10 +3,12 @@ using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class LoginController : Controller
     {
         private readonly IAuthRepository _repo;

@@ -2,6 +2,7 @@
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
 using static Domain.Models.Enum;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -18,21 +19,21 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             _doctorRepo = doctorRepo;
             _context = context;
         }
-
+        [Authorize(Roles = "Admin,Doctor,Patient,HelpDesk")]
         [HttpGet("GetAllDoctors")]
         public async Task<IActionResult> GetAllDoctors()
         {
             var doctors = await _doctorRepo.GetAllDoctorsAsync();
             return Ok(doctors);
         }
-
+        [Authorize(Roles = "Admin,Doctor,Patient,HelpDesk")]
         [HttpGet("GetAllDoctorsById")]
         public async Task<IActionResult> GetDoctorByIdAsync(int id)
         {
             var doctors = await _doctorRepo.GetAllDoctorsAsync();
             return Ok(doctors);
         }
-
+        [Authorize(Roles = "Admin,HelpDesk")]
         [HttpGet("GetDoctorsByName")]
         public async Task<IActionResult> GetDoctorsByName(string name)
         {
@@ -40,6 +41,8 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             if (!doctors.Any()) return NotFound("Doctor not found");
             return Ok(doctors);
         }
+
+        [Authorize(Roles = "Admin,Patient,HelpDesk")]
 
         [HttpGet("GetDoctorsBySpecialization")]
         public async Task<IActionResult> GetDoctorsBySpecialization([FromQuery] specialization  Specializaition)
@@ -51,6 +54,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
              }
             return Ok(doctors);
         }
+        [Authorize(Roles = "Admin,Doctor,HelpDesk")]
         [HttpPut("ActiveStatus")]
         public async Task<IActionResult> UpdateActiveStatus(string Email,Status status)
         {
