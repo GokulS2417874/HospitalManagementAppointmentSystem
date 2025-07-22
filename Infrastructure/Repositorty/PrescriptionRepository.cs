@@ -18,22 +18,19 @@ namespace Infrastructure.Repositorty
 
         public async Task<(bool Success, string Message)> AddPrescriptionAsync(PrescriptionDto dto)
         {
-            MedicineType combinedMedication = MedicineType.none;
-
-            foreach (var med in dto.Medication)
-            {
-                combinedMedication |= med;
-            }
 
             var prescription = new Prescription
             {
                 AppointmentId = dto.AppointmentId,
                 DoctorId = dto.DoctorId,
                 PatientId = dto.PatientId,
-                Medication = combinedMedication,
-                Dosage = dto.Dosage,
                 Instructions = dto.Instructions,
-
+                Medicines = dto.Medicines.Select(m => new PrescriptionMedicine
+                {
+                    MedicineType = m.MedicineType,
+                    Dosages = m.Dosages,
+                     ScheduleTime =m.ScheduleTime
+                }).ToList(),
             };
 
             _context.Prescriptions.Add(prescription);
@@ -78,25 +75,29 @@ namespace Infrastructure.Repositorty
 
         public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id)
         {
-            var pres = await _context.Prescriptions.FirstOrDefaultAsync(p => p.PrescriptionId == id);
+            var pres = await _context.Prescriptions.Include(p => p.Medicines).FirstOrDefaultAsync(p => p.PrescriptionId == id);
             if (pres == null)
                 return null;
 
-            var meds = System.Enum.GetValues(typeof(MedicineType))
-                .Cast<MedicineType>()
-                .Where(flag => flag != MedicineType.none && pres.Medication.HasFlag(flag))
-                .Select(m => m)
-                .ToList();
+            //var meds = System.Enum.GetValues(typeof(MedicineType))
+            //    .Cast<MedicineType>()
+            //    .Where(flag => flag != MedicineType.none && pres.Medication.HasFlag(flag))
+            //    .Select(m => m)
+            //    .ToList();
 
             return new PrescriptionDto
             {
                 AppointmentId = pres.AppointmentId,
                 DoctorId = pres.DoctorId,
                 PatientId = pres.PatientId,
-                Medication = meds,
-                Dosage = pres.Dosage,
                 Instructions = pres.Instructions,
-                ScheduleTime = pres.ScheduleTime
+                Medicines = pres.Medicines.Select(m => new PrescriptionMedicineDto
+                {
+                    MedicineType = m.MedicineType,
+                    Dosages = m.Dosages, 
+                    ScheduleTime = m.ScheduleTime
+                }).ToList(),
+
             };
         }
     }

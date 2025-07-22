@@ -39,7 +39,6 @@
         }
         public enum AppointmentStatus
         {
-           // InProgress,
             Scheduled,
             Cancelled,
             Completed,
@@ -89,7 +88,6 @@
             AfterMeal,
             BeforeMeal
         }
-        [Flags]
         public enum MedicineType
         {
             none =0  ,
