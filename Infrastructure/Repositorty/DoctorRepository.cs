@@ -30,7 +30,10 @@ namespace Infrastructure.Repositorty
             d.Active_Status,
             d.EmergencyContactName,
             d.EmergencyContactPhoneNumber,
-            d.EmergencyContactRelationship
+            d.EmergencyContactRelationship,
+            d.ProfileImage,
+            d.ProfileImageFileName,
+            d.ProfileImageMimeType
         }).ToListAsync();
 
         public async Task<IEnumerable<object>> GetDoctorByIdAsync(int id)
@@ -49,7 +52,10 @@ namespace Infrastructure.Repositorty
                 d.Active_Status,
                 d.EmergencyContactName,
                 d.EmergencyContactPhoneNumber,
-                d.EmergencyContactRelationship
+                d.EmergencyContactRelationship,
+                d.ProfileImage,
+                d.ProfileImageFileName,
+                d.ProfileImageMimeType
             }).ToListAsync();
         }
 
@@ -68,8 +74,11 @@ namespace Infrastructure.Repositorty
                     d.Active_Status,
                     d.EmergencyContactName,
                     d.EmergencyContactPhoneNumber,
-                    d.EmergencyContactRelationship
-                    }).ToListAsync();
+                    d.EmergencyContactRelationship,
+                    d.ProfileImage,
+                    d.ProfileImageFileName,
+                    d.ProfileImageMimeType
+                }).ToListAsync();
         }
 
         public async Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization)

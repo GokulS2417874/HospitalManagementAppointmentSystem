@@ -88,5 +88,10 @@ namespace Infrastructure.Repository
 
             return users;
         }
+        public async Task<Users?> FindByIdAsync(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
+
     }
 }

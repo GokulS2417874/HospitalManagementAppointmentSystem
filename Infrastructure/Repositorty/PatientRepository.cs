@@ -20,7 +20,10 @@ namespace Infrastructure.Repositorty
                    p.PhoneNumber,
                    p.EmergencyContactName,
                    p.EmergencyContactPhoneNumber,
-                   p.EmergencyContactRelationship
+                   p.EmergencyContactRelationship,
+                   p.ProfileImage,
+                   p.ProfileImageFileName,
+                   p.ProfileImageMimeType
                }).ToListAsync();
 
         public async Task<IEnumerable<object>> GetPatientByIdAsync(int id)
@@ -33,7 +36,10 @@ namespace Infrastructure.Repositorty
                 p.PhoneNumber,
                 p.EmergencyContactName,
                 p.EmergencyContactPhoneNumber,
-                p.EmergencyContactRelationship
+                p.EmergencyContactRelationship,
+                p.ProfileImage,
+                p.ProfileImageFileName,
+                p.ProfileImageMimeType
             }).ToListAsync();
         }
 
@@ -47,7 +53,10 @@ namespace Infrastructure.Repositorty
                     p.PhoneNumber,
                     p.EmergencyContactName,
                     p.EmergencyContactPhoneNumber,
-                    p.EmergencyContactRelationship
+                    p.EmergencyContactRelationship,
+                    p.ProfileImage,
+                    p.ProfileImageFileName,
+                    p.ProfileImageMimeType
                 }).ToListAsync();
         }
 

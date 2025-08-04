@@ -29,7 +29,10 @@ namespace Infrastructure.Repositorty
               h.PhoneNumber,
               h.EmergencyContactName,
               h.EmergencyContactPhoneNumber,
-              h.EmergencyContactRelationship
+              h.EmergencyContactRelationship,
+              h.ProfileImage,
+              h.ProfileImageFileName,
+              h.ProfileImageMimeType
           }).ToListAsync();
 
         public async Task<object> GetHelpDeskByIdAsync(int id)
@@ -42,7 +45,10 @@ namespace Infrastructure.Repositorty
                 h.PhoneNumber,
                 h.EmergencyContactName,
                 h.EmergencyContactPhoneNumber,
-                h.EmergencyContactRelationship
+                h.EmergencyContactRelationship,
+                h.ProfileImage,
+                h.ProfileImageFileName,
+                h.ProfileImageMimeType
             }).ToListAsync();
         }
 
@@ -56,7 +62,10 @@ namespace Infrastructure.Repositorty
                     h.PhoneNumber,
                     h.EmergencyContactName,
                     h.EmergencyContactPhoneNumber,
-                    h.EmergencyContactRelationship
+                    h.EmergencyContactRelationship,
+                    h.ProfileImage,
+                    h.ProfileImageFileName,
+                    h.ProfileImageMimeType
                 }).ToListAsync();
         }
         public async Task<Users> RegistrationDoneByHelpDesk(GenericRegistrationForm form)

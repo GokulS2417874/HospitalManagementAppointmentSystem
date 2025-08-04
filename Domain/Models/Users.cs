@@ -25,6 +25,10 @@ namespace Domain.Models
         public string? EmergencyContactPhoneNumber { get; set; }
         public DateOnly? DateOfBirth { get; set; }
         public PatientGender? Gender { get; set; }
+        public byte[]? ProfileImage { get; set; }
+        public string? ProfileImageMimeType { get; set; }
+        public string? ProfileImageFileName { get; set; }
+
         public specialization? Specialization { get; set; }
         public string? Qualification { get; set; }  
         public int? ExperienceYears { get; set; }
