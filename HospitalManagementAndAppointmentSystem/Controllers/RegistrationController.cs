@@ -98,10 +98,14 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             if (user == null)
                 return BadRequest("Invalid role or missing required fields");
 
+
+          
+
             await _repo.AddUserAsync(user);
             await _repo.SaveAsync();
 
             return Ok($"{user.Role} registered successfully");
         }
+
     }
 }

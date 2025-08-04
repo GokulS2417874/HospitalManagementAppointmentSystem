@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 using static Domain.Models.Enum;
 
 namespace Infrastructure.DTOs
@@ -23,5 +24,7 @@ namespace Infrastructure.DTOs
         public string? Qualification { get; set; }
         public int? ExperienceYears { get; set; }
         public string? Languages { get; set; }
+        public IFormFile? ProfileImage { get; set; }
+
     }
 }

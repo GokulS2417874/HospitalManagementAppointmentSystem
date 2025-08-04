@@ -13,5 +13,7 @@ namespace Infrastructure.Interface
         Task<string> UpdateUserProfileAsync(string email, GenericRegistrationForm dto);
         Task<string> DeleteUserAsync(string email);
         Task<ICollection<Users>> GetAllUsersAsync();
+        Task<Users?> FindByIdAsync(int id);
+
     }
 }

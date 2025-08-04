@@ -60,6 +60,16 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 
             return Ok(result);
         }
+        [HttpGet("{id}/profile-image")]
+        public async Task<IActionResult> GetProfileImage(int id)
+        {
+            var user = await _userRepository.FindByIdAsync(id); // You need to implement this in IUserRepository
+
+            if (user == null || user.ProfileImage == null)
+                return NotFound("User or profile image not found");
+
+            return File(user.ProfileImage, user.ProfileImageMimeType, user.ProfileImageFileName);
+        }
 
     }
 }
