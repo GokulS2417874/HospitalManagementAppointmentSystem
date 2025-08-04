@@ -36,7 +36,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     return BadRequest("An Admin is already registered. Only one Admin is allowed.");
             }
 
-            Users? user = form.Role 
+            Users? user = form.Role
             switch
             {
                 UserRole.Admin => new Admin
@@ -99,7 +99,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return BadRequest("Invalid role or missing required fields");
 
 
-          
+
 
             await _repo.AddUserAsync(user);
             await _repo.SaveAsync();

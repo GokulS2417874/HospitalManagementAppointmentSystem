@@ -84,7 +84,7 @@ namespace Infrastructure.Repositorty
                 Role = UserRole.Patient
             };
 
-             _context.Users.Add(user);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
             user.RegisteredBy = AppointmentType.HelpDesk;
             await _context.SaveChangesAsync();
