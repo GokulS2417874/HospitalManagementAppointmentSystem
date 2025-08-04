@@ -36,6 +36,13 @@ namespace Domain.Models
         public int? Consultant_fees { get; set; } = 500;
         public string? Languages { get; set; }
         public ShiftTime? Shift { get; set; } = ShiftTime.NotAllocated;
+
+        public BookingSource IsBooked { get; set; } = BookingSource.None;
+
+       
+
+
+
         public TimeOnly? ShiftStartTime
         {
             get

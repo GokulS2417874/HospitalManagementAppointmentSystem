@@ -16,27 +16,26 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         private readonly AppDbContext _context;
         public readonly TokenGeneration _tok;
         public readonly IEmailSender _email;
-        public LoginController(IAuthRepository repo, IPasswordHasher hash,AppDbContext context,TokenGeneration tok,IEmailSender email)
+        public LoginController(IAuthRepository repo, IPasswordHasher hash, AppDbContext context, TokenGeneration tok, IEmailSender email)
         {
             _repo = repo;
-            _hash = hash; 
+            _hash = hash;
             _context = context;
             _tok = tok;
             _email = email;
-            
         }
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromForm] LoginDto dto)
         {
-            if(!ModelState.IsValid) return BadRequest(ModelState);
-            var Password =await _repo.FindPassword(dto.Email);
-            if (Password == null) 
-                return BadRequest("Email Not Found"); 
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var Password = await _repo.FindPassword(dto.Email);
+            if (Password == null)
+                return BadRequest("Email Not Found");
             else if ((_hash.Verify(dto.Password, Password.ToString()) == false))
-                return BadRequest("Enter Valid Password"); 
+                return BadRequest("Enter Valid Password");
             var user = _context.Users.Where(x => x.Email == dto.Email).FirstOrDefault();
             var Token = _tok.GenerateJWT(user);
-            return Ok(new { Token = Token, Role = user.Role.ToString()});
+            return Ok(new { Token = Token, Role = user.Role.ToString() });
 
         }
         [HttpPost("forgot")]
@@ -55,15 +54,34 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             //var link = $"{dto.FrontendBaseUrl}?token={user.ResetToken}";
             //await _email.SendResetLinkAsync(user.Email, body);
 
-            var body = $"https://front/reset?token={user.ResetToken}";
+            //var body = $"https://front/reset?token={user.ResetToken}";
+            //            var body = $@"Dear User {user.UserName},
+
+            //Your password reset token is: {user.ResetToken}.
+
+            //Please copy and paste this token in the reset form on the portal.
+
+            //Best regards,
+            //Prescripto Healthcare Team";
+            var resetLink = $"http://localhost:4201/password-reset?token={user.ResetToken}";
+            var body = $@"Dear User {user.UserName},
+ 
+Please click on the following link to reset your password:
+ 
+{resetLink}
+ 
+Or copy and paste this link in your browser if clicking doesn't work.
+ 
+Best regards,
+Prescripto Healthcare Team";
 
             await _email.SendResetLinkAsync(user.Email, body);
-
             return Ok(
                 new
                 {
 
-                    message = "Reset link sent",
+                    //message = "Reset link sent",
+                    message = "Reset token is sent to your email",
                     token = user.ResetToken,
                     body
                 }
@@ -71,7 +89,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 );
         }
         [HttpPost("reset")]
-        public async Task<IActionResult> Reset([FromForm]ResetPasswordDto dto)
+        public async Task<IActionResult> Reset([FromForm] ResetPasswordDto dto)
         {
             var user = await _repo.FindByResetTokenAsync(dto.Token);
 

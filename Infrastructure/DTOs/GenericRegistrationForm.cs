@@ -26,5 +26,10 @@ namespace Infrastructure.DTOs
         public string? Languages { get; set; }
         public IFormFile? ProfileImage { get; set; }
 
+        public BookingSource IsBooked { get; set; } = BookingSource.None;
+     
+
+
+
     }
 }

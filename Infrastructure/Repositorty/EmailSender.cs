@@ -28,7 +28,8 @@ namespace Infrastructure.Repository
                 Subject = "Password Reset",
                 Body = new TextPart("plain")
                 {
-                    Text = $"Click the link to reset your password: {link}"
+                    //Text = $"Click the link to reset your password: {link}"
+                    Text = link
                 }
             };
 
