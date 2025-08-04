@@ -1,5 +1,4 @@
-
-using Domain.Data;
+﻿using Domain.Data;
 using Domain.Models;
 using Infrastructure.Interface;
 using Infrastructure.Repositorty;
@@ -34,14 +33,27 @@ namespace HospitalManagementAndAppointmentSystem
             builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-            builder.Services.AddScoped<IAdminRepository,AdminRepository>();
+            builder.Services.AddScoped<IAdminRepository, AdminRepository>();
             builder.Services.AddScoped<IHelpDeskRepository, HelpDeskRepository>();
             builder.Services.AddScoped<IPayementRepository, PaymentRepository>();
             builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
 
+            // ✅ FIXED: Single CORS Configuration with correct port
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins(
+                        "http://localhost:4201",   // Angular dev server
+                        "http://localhost:52450",
+                        "http://localhost:4200"// Alternative port
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+                });
+            });
 
-
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
             var key = builder.Configuration["ApiSettings:Secret"];
 
             builder.Services.AddAuthentication(options =>
@@ -93,7 +105,6 @@ namespace HospitalManagementAndAppointmentSystem
             });
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -108,11 +119,13 @@ namespace HospitalManagementAndAppointmentSystem
                 app.UseSwaggerUI();
             }
 
+            // ✅ Enable CORS (IMPORTANT: Must be before UseAuthentication)
+            app.UseCors();
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

@@ -136,6 +136,14 @@
             NotApproved
         }
 
+        public enum BookingSource
+        {
+            None,
+            Patient,
+            HelpDesk
+        }
+
+
     }
 
 }
