@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Interface
 {
-    public  interface IUserRepository
+    public interface IUserRepository
     {
         Task<string> UpdateUserProfileAsync(string email, GenericRegistrationForm dto);
         Task<string> DeleteUserAsync(string email);

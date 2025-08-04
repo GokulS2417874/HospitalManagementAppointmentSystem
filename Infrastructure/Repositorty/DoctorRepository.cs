@@ -18,23 +18,23 @@ namespace Infrastructure.Repositorty
         public async Task<IEnumerable<object>> GetAllDoctorsAsync() => await _context.Users
             .Where(d => d.Role == UserRole.Doctor)
             .Select(d => new
-        {
-            d.UserId,
-            d.UserName,
-            d.Email,
-            d.PhoneNumber,
-            d.Specialization,
-            d.Qualification,
-            d.ExperienceYears,
-            d.Consultant_fees,
-            d.Active_Status,
-            d.EmergencyContactName,
-            d.EmergencyContactPhoneNumber,
-            d.EmergencyContactRelationship,
-            d.ProfileImage,
-            d.ProfileImageFileName,
-            d.ProfileImageMimeType
-        }).ToListAsync();
+            {
+                d.UserId,
+                d.UserName,
+                d.Email,
+                d.PhoneNumber,
+                d.Specialization,
+                d.Qualification,
+                d.ExperienceYears,
+                d.Consultant_fees,
+                d.Active_Status,
+                d.EmergencyContactName,
+                d.EmergencyContactPhoneNumber,
+                d.EmergencyContactRelationship,
+                d.ProfileImage,
+                d.ProfileImageFileName,
+                d.ProfileImageMimeType
+            }).ToListAsync();
 
         public async Task<IEnumerable<object>> GetDoctorByIdAsync(int id)
         {
@@ -83,23 +83,23 @@ namespace Infrastructure.Repositorty
 
         public async Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization)
         {
-           
-                return await _context.Users
-                    .Where(d => d.Role == UserRole.Doctor && d.Specialization == specialization)
-                    .Select(d => new
-                    {
-                        d.UserId,
-                        d.UserName,
-                        d.Specialization,
-                        d.Qualification,
-                        d.ExperienceYears,
-                        d.Consultant_fees,
-                        d.Active_Status,
-                        d.EmergencyContactRelationship,
-                        d.PhoneNumber
-                    }).ToListAsync();
 
-            
+            return await _context.Users
+                .Where(d => d.Role == UserRole.Doctor && d.Specialization == specialization)
+                .Select(d => new
+                {
+                    d.UserId,
+                    d.UserName,
+                    d.Specialization,
+                    d.Qualification,
+                    d.ExperienceYears,
+                    d.Consultant_fees,
+                    d.Active_Status,
+                    d.EmergencyContactRelationship,
+                    d.PhoneNumber
+                }).ToListAsync();
+
+
         }
 
         public async Task<Users> UpdateActiveStatus(string email, Status Status)
@@ -109,7 +109,7 @@ namespace Infrastructure.Repositorty
                 return null;
             EmployeeDetails.Active_Status = Status;
             var curtime = TimeOnly.FromDateTime(DateTime.Now);
-            if (EmployeeDetails.Active_Status.Equals(Status.Online) && EmployeeDetails.ShiftEndTime  < curtime)
+            if (EmployeeDetails.Active_Status.Equals(Status.Online) && EmployeeDetails.ShiftEndTime < curtime)
             {
                 EmployeeDetails.Active_Status = Status.Offline;
             }

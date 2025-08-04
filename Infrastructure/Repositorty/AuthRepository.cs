@@ -91,7 +91,7 @@ namespace Infrastructure.Repository
                     DateOfBirth = form.DateOfBirth,
                     Gender = form.Gender ?? PatientGender.Others,
                     Role = UserRole.Patient
-                    
+
                 },
 
                 UserRole.HelpDesk => new HelpDesk

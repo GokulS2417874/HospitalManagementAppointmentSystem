@@ -69,7 +69,7 @@ namespace Infrastructure.Repository
 
         public async Task<string> DeleteUserAsync(string email)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email== email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             if (user == null)
             {
@@ -82,7 +82,7 @@ namespace Infrastructure.Repository
             return "User deleted successfully.";
         }
         public async Task<ICollection<Users>> GetAllUsersAsync()
-        
+
         {
             var users = await _context.Users.ToListAsync();
 
