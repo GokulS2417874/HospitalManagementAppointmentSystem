@@ -8,7 +8,9 @@ namespace Domain.Models
         public DateOnly AppointmentDate { get; set; } 
         public TimeOnly? AppointmentStartTime { get; set; }
         public TimeOnly? AppointmentEndTime { get; set; }
-        public AppointmentStatus? AppointmentStatus { get; set; } 
+        public AppointmentStatus? AppointmentStatus { get; set; }
+        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+
         public byte[]? FilePath { get; set; }
         public string? FileName { get; set; }
         public string? MimeType { get; set; }
@@ -18,6 +20,12 @@ namespace Domain.Models
         public string? DoctorName { get; set; }
         public specialization Specialization { get; set; }
         public bool IsReminderSent { get; set; }
+
+
+        public BookedBy BookedBy { get; set; }
+
+        public int? HelpDeskId { get; set; }
+
 
     }
 }

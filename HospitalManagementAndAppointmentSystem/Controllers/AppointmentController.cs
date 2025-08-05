@@ -26,7 +26,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(Result);
 
         }
-        [Authorize(Roles = "Admin,Patient")]
+        [Authorize(Roles = "Admin,HelpDesk,Patient")]
         [HttpPost("BookAppointment")]
         public async Task<IActionResult> BookAppointment([FromForm] AppointmentDto dto, specialization specialization, string Email,ShiftTime shift)
         {

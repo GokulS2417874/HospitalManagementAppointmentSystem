@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-
+using static Domain.Models.Enum;
 
 namespace Infrastructure.DTOs
 {
@@ -12,6 +12,11 @@ namespace Infrastructure.DTOs
         public TimeOnly? AppointmentEndTime { get; set; }
         public bool Submit { get; set; } = false;
         public IFormFile? FilePath { get; set; }
+
+        public BookedBy BookedBy { get; set; }
+
+        public int? HelpDeskId { get; set; }
+
 
     }
     public class DoctorAppointmentUpdateDto

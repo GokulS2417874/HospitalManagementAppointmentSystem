@@ -1,56 +1,47 @@
-﻿using Infrastructure.DTOs;
-using Infrastructure.Interface;
-using Microsoft.AspNetCore.Mvc;
-using static Domain.Models.Enum;
+﻿using Infrastructure.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
-namespace HospitalManagementAndAppointmentSystem.Controllers
+namespace YourNamespace.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
-        private readonly IPayementRepository _paymentRepo;
+        private readonly IPayementRepository _paymentRepository;
 
-        public PaymentController(IPayementRepository paymentRepo)
+        public PaymentController(IPayementRepository paymentRepository)
         {
-            _paymentRepo = paymentRepo;
+            _paymentRepository = paymentRepository;
         }
 
-        [Authorize(Roles = "Admin,Helpdesk")]
-        [HttpPost("CreatePayment")]
-
-        public async Task<IActionResult> CreatePayment([FromForm] CreatePaymentDto dto)
+        // Earnings by Day
+        [HttpGet("earnings/day")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetEarningsByDay([FromQuery] DateTime date)
         {
-            if (!System.Enum.IsDefined(typeof(PaymentMethod), dto.PaymentMethod))
-            {
-                return BadRequest("InValid Payment Method");
-            }
-
-            try
-            {
-                var payment = await _paymentRepo.CreatePaymentAsync(dto);
-                return Ok(new
-                {
-                    payment.PaymentId,
-                    payment.TotalAmount,
-                    payment.PaidAmount,
-                    PendingAmount = payment.TotalAmount - payment.PaidAmount,
-                });
-            }
-            catch (Exception e) {
-                return BadRequest(e.Message);
-            }
+            var total = await _paymentRepository.GetTotalEarningsByDayAsync(date);
+            return Ok(new { Date = date.Date, TotalEarnings = total });
         }
-        [Authorize(Roles = "Admin,Doctor,Patient,Helpdesk")]
-        [HttpGet("Appointment/{appointmentId}")]
 
-            public async Task<IActionResult> GetByAppointment (int appointmentId)
+        // Earnings by Month
+        [HttpGet("earnings/month")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetEarningsByMonth([FromQuery] int year, [FromQuery] int month)
         {
-            var payments = await _paymentRepo.GetPaymentsByAppointmentAsync(appointmentId);
-            return Ok(payments);
+            var total = await _paymentRepository.GetTotalEarningsByMonthAsync(year, month);
+            return Ok(new { Year = year, Month = month, TotalEarnings = total });
         }
-     }
- }
-    
 
+        // Earnings by Year
+        [HttpGet("earnings/year")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetEarningsByYear([FromQuery] int year)
+        {
+            var total = await _paymentRepository.GetTotalEarningsByYearAsync(year);
+            return Ok(new { Year = year, TotalEarnings = total });
+        }
+    }
+}

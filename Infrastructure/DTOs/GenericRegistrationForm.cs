@@ -26,10 +26,15 @@ namespace Infrastructure.DTOs
         public string? Languages { get; set; }
         public IFormFile? ProfileImage { get; set; }
 
-        public BookingSource IsBooked { get; set; } = BookingSource.None;
-     
+        public BookedBy? BookedBy { get; set; }
+        // Who booked the registration
+        public int? HelpDeskId { get; set; }
 
 
 
+
+
+
+
+        }
     }
-}

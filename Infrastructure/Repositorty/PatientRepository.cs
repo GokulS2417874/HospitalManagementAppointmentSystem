@@ -60,5 +60,11 @@ namespace Infrastructure.Repositorty
                 }).ToListAsync();
         }
 
+        public async Task<int> GetPatientCountAsync()
+        {
+            return await _context.Users.CountAsync(p => p.Role == UserRole.Patient);
+        }
+
+
     }
 }

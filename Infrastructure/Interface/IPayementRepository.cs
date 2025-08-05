@@ -1,16 +1,13 @@
 ﻿using Domain.Models;
 using Infrastructure.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Infrastructure.Interface
+public interface IPayementRepository
 {
-    public interface IPayementRepository
-    {
-        Task<Payment> CreatePaymentAsync(CreatePaymentDto dto);
-        Task<List<Payment>> GetPaymentsByAppointmentAsync(int appointmentId);
-    }
+    Task CreatePaymentAsync(CreatePaymentDto dto);
+    Task<List<Payment>> GetPaymentsByAppointmentAsync(int appointmentId);
+
+    // Add-on functions
+    Task<decimal> GetTotalEarningsByDayAsync(DateTime date);
+    Task<decimal> GetTotalEarningsByMonthAsync(int year, int month);
+    Task<decimal> GetTotalEarningsByYearAsync(int year);
 }
