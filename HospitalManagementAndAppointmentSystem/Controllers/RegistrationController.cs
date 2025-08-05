@@ -2,8 +2,8 @@
 using Infrastructure.DTOs;
 using Infrastructure.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using static Domain.Models.Enum;
-
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -36,8 +36,9 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     return BadRequest("An Admin is already registered. Only one Admin is allowed.");
             }
 
-            Users? user = form.Role
-            switch
+            
+
+            Users? user = form.Role switch
             {
                 UserRole.Admin => new Admin
                 {
@@ -60,9 +61,9 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     Specialization = form.Specialization,
                     Qualification = form.Qualification,
                     ExperienceYears = form.ExperienceYears ?? 0,
-                    //Shift = form.Shift,
                     Role = UserRole.Doctor
                 },
+
 
                 UserRole.Patient => new Patient
                 {
@@ -75,8 +76,11 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     EmergencyContactPhoneNumber = form.EmergencyContactPhoneNumber,
                     DateOfBirth = form.DateOfBirth,
                     Gender = form.Gender ?? PatientGender.Others,
+                    BookedBy = form.BookedBy ?? BookedBy.Patient,
+                    HelpDeskId = form.HelpDeskId, // <-- Use the value from the form
                     Role = UserRole.Patient
                 },
+
 
                 UserRole.HelpDesk => new HelpDesk
                 {
@@ -93,19 +97,17 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                     Qualification = form.Qualification,
                     Role = UserRole.HelpDesk
                 },
+
+                _ => null
             };
 
             if (user == null)
                 return BadRequest("Invalid role or missing required fields");
-
-
-
 
             await _repo.AddUserAsync(user);
             await _repo.SaveAsync();
 
             return Ok($"{user.Role} registered successfully");
         }
-
     }
 }

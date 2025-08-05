@@ -32,6 +32,7 @@ namespace HospitalManagementAndAppointmentSystem
                 new Claim(ClaimTypes.Email,user.Email.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
+
             };
             var Token = new JwtSecurityToken(
                 issuer: "Admin",

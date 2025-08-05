@@ -16,6 +16,9 @@ namespace Infrastructure.Interface
         Task<IEnumerable<object>> GetDoctorsByNameAsync(string name);
         Task<IEnumerable<object>> GetDoctorsBySpecializationAsync(specialization specialization);
         Task<Users> UpdateActiveStatus(string email, Status Status);
+        Task<int> GetDoctorCountAsync();
+
+
     }
 }
 

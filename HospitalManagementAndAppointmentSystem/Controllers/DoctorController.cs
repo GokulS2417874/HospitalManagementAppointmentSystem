@@ -1,8 +1,9 @@
 ﻿using Domain.Data;
 using Infrastructure.Interface;
+using Infrastructure.Repositorty;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Domain.Models.Enum;
-using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
 {
@@ -65,6 +66,16 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 
 
         }
+        [Authorize(Roles = "Admin,HelpDesk")]
+        [HttpGet("count")]
+        public async Task<IActionResult> GetDoctorCount()
+        {
+            var count = await _doctorRepo.GetDoctorCountAsync();
+            return Ok(new { DoctorCount = count });
+        }
+
+
+
 
     }
 }

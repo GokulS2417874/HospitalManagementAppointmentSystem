@@ -101,6 +101,9 @@ namespace Infrastructure.Repositorty
                 FilePath = filebytes,
                 FileName = dto.FilePath?.FileName,
                 MimeType = dto.FilePath?.ContentType,
+                BookedBy = dto.BookedBy,
+                HelpDeskId = dto.BookedBy == BookedBy.HelpDesk ? dto.HelpDeskId : null
+
             };
             var isAlreadyBooked = await _context.Appointments
                                                 .AnyAsync(a => (a.AppointmentDate == Today && a.PatientId == AppointmentDetails.PatientId));

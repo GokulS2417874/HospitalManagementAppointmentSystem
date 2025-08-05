@@ -13,5 +13,11 @@ namespace Infrastructure.Interface
         Task<IEnumerable<object>> GetAllPatientsAsync();
         Task<IEnumerable<object>> GetPatientByIdAsync(int id);
         Task<IEnumerable<object>> GetPatientsByNameAsync(string name);
+        Task<int> GetPatientCountAsync();
+
+
+
+
+
     }
 }

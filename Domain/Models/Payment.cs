@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static Domain.Models.Enum;
 
 namespace Domain.Models
@@ -7,15 +9,21 @@ namespace Domain.Models
     {
         [Key]
         public int PaymentId { get; set; }
-        public int AppointmentId { get; set; }
+
         public int PatientId { get; set; }
         public Users Patient { get; set; }
-        public Appointment Appointment { get; set; }
-        public decimal TotalAmount { get; set; }
-        public decimal PaidAmount { get; set; }
-        public decimal PendingAmount => TotalAmount - PaidAmount;
-        public DateTime PaymentDate {  get; set; } = DateTime.Now;
+
+
+        [ForeignKey("Appointment")]
+        public int AppointmentId { get; set; }
+        public Appointment Appointment { get; set; } = null!;
+
+        public decimal Amount { get; set; }
+
+        public string TransactionId { get; set; } = string.Empty;
+
         public PaymentMethod PaymentMethod { get; set; }
 
+        public DateTime PaymentDate { get; set; }
     }
 }

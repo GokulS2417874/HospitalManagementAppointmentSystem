@@ -116,6 +116,10 @@ namespace Infrastructure.Repositorty
             await _context.SaveChangesAsync();
             return EmployeeDetails;
         }
+        public async Task<int> GetDoctorCountAsync()
+        {
+            return await _context.Users.CountAsync(d => d.Role == UserRole.Doctor);
+        }
 
 
 
