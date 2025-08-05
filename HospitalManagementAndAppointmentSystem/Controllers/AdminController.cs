@@ -1,8 +1,9 @@
 ﻿using Domain.Data;
 using Infrastructure.Interface;
+using Infrastructure.Repositorty;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Domain.Models.Enum;
-using Microsoft.AspNetCore.Authorization;
 
 
 namespace HospitalManagementAndAppointmentSystem.Controllers
@@ -141,8 +142,17 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         var count = _repo.GetAppointmentCountByYear(year);
         return Ok(new { Year = year, Count = count });
     }
+
+     [HttpGet("employee-count")]
+        public async Task<IActionResult> GetEmployeeCount()
+        {
+            var count = await _repo.GetEmployeeCountAsync();
+
+            return Ok(new { EmployeeCount = count });
+        }
+    }
     }
 
 
-}
+
 

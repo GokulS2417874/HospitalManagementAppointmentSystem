@@ -68,12 +68,12 @@ namespace Infrastructure.Repositorty
         
         public async Task<List<Users?>> ShiftNotAllocatedList()
         {
-            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.Shift.Equals(ShiftTime.NotAllocated)).ToListAsync();
+            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.Shift.Equals(ShiftTime.NotAllocated) && q.IsApprovedByAdmin.Equals(AdminApproval.Approved)).ToListAsync();
             return EmployeeDetailsList;
         }
         public async Task<string?> AllocateShiftForEmployeeAsync(int employeeId, ShiftTime shift)
         {
-            var employee = await _context.Users.FirstOrDefaultAsync(e => e.UserId == employeeId);
+            var employee = await _context.Users.FirstOrDefaultAsync(e => e.UserId == employeeId && e.IsApprovedByAdmin.Equals(AdminApproval.Approved));
 
             if (employee == null)
                 return null;
@@ -87,7 +87,7 @@ namespace Infrastructure.Repositorty
 
         public async Task<List<Users?>> EmployeeList()
         {
-            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.IsApprovedByAdmin.Equals(AdminApproval.Approved)).ToListAsync();
+            var EmployeeDetailsList = await _context.Users.Where(q => !q.Role.Equals(UserRole.Patient) && !q.Role.Equals(UserRole.Admin) && q.IsApprovedByAdmin.Equals(AdminApproval.Approved) && !q.Shift.Equals(ShiftTime.NotAllocated)).ToListAsync();
             return EmployeeDetailsList;
         }
         public List<Appointment> GetAppointmentsByDate(DateOnly date)
@@ -125,7 +125,18 @@ namespace Infrastructure.Repositorty
             return _context.Appointments
                            .Count(a => a.AppointmentDate.Year == year);
         }
-    }
 
+        public async Task<int> GetEmployeeCountAsync()
+        {
+            return await _context.Users
+                .Where(u => u.Role == UserRole.Doctor || u.Role == UserRole.HelpDesk)
+                .CountAsync();
+        }
+
+
+
+    }
 }
+
+
 

@@ -90,5 +90,23 @@ namespace Infrastructure.Repositorty
             await _context.SaveChangesAsync();
             return user;
         }
+        public async Task<Users> UpdateActiveStatus(string email, Status Status)
+        {
+            var EmployeeDetails = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && !u.Role.Equals(UserRole.Patient));
+            if (EmployeeDetails == null)
+                return null;
+            EmployeeDetails.Active_Status = Status;
+            var curtime = TimeOnly.FromDateTime(DateTime.Now);
+            if (EmployeeDetails.Active_Status.Equals(Status.Online) && EmployeeDetails.ShiftEndTime < curtime)
+            {
+                EmployeeDetails.Active_Status = Status.Offline;
+            }
+            await _context.SaveChangesAsync();
+            return EmployeeDetails;
+        }
+        public async Task<int> GetHelpDeskCountAsync()
+        {
+            return await _context.Users.CountAsync(d => d.Role == UserRole.HelpDesk);
+        }
     }
 }

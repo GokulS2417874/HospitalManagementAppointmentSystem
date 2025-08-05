@@ -21,5 +21,6 @@ namespace Infrastructure.Interface
         int GetAppointmentCountByMonth(int month, int year);
         List<Appointment> GetAppointmentsByYear(int year);
         int GetAppointmentCountByYear(int year);
+        Task <int> GetEmployeeCountAsync();
     }
 }

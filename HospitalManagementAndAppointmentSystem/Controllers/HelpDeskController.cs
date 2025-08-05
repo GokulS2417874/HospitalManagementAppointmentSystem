@@ -16,7 +16,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
     {
         private readonly IHelpDeskRepository _helpdeskRepo;
 
-        public HelpDeskController(IHelpDeskRepository helpdeskRepo,AppDbContext context)
+        public HelpDeskController(IHelpDeskRepository helpdeskRepo, AppDbContext context)
         {
             _helpdeskRepo = helpdeskRepo;
         }
@@ -56,5 +56,12 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 : Ok(result);
         }
 
+        [Authorize(Roles = "Admin,HelpDesk")]
+        [HttpGet("count")]
+        public async Task<IActionResult> GetHelpDeskCount()
+        {
+            var count = await _helpdeskRepo.GetHelpDeskCountAsync();
+            return Ok(new { HelpDeskCount = count });
+        }
     }
-    }
+}
