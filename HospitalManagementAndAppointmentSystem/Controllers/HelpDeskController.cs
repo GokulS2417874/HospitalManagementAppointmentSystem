@@ -57,6 +57,18 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         }
 
         [Authorize(Roles = "Admin,HelpDesk")]
+        [HttpPut("ActiveStatus")]
+        public async Task<IActionResult> UpdateActiveStatus(string Email, Status status)
+        {
+            var EmployeeDetails = await _helpdeskRepo.UpdateActiveStatus(Email, status);
+            if (EmployeeDetails == null)
+                return BadRequest("EmployeeId not found");
+            return Ok(EmployeeDetails);
+
+        }
+
+
+        [Authorize(Roles = "Admin,HelpDesk")]
         [HttpGet("count")]
         public async Task<IActionResult> GetHelpDeskCount()
         {
