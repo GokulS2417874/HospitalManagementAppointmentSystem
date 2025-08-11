@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 using static Domain.Models.Enum;
 
 namespace Domain.Models
@@ -13,8 +9,10 @@ namespace Domain.Models
         public int PrescriptionId { get; set; }
         public string MedicineType { get; set; }
         public string Dosages { get; set; }
+
+        [JsonIgnore]  // Add this to prevent circular reference
         public Prescription Prescription { get; set; }
+
         public string ScheduleTime { get; set; }
     }
-
 }

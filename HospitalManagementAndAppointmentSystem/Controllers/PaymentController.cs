@@ -1,8 +1,11 @@
-﻿using Infrastructure.Interface;
+﻿using Infrastructure.DTOs;
+using Infrastructure.Interface;
+using Infrastructure.Repositorty;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using static Domain.Models.Enum;
 
 namespace YourNamespace.Controllers
 {
@@ -16,6 +19,49 @@ namespace YourNamespace.Controllers
         {
             _paymentRepository = paymentRepository;
         }
+
+        [HttpPost("CreatePayment")]
+
+        public async Task<IActionResult> CreatePayment([FromForm] CreatePaymentDto dto)
+        {
+            if (!System.Enum.IsDefined(typeof(PaymentMethod), dto.PaymentMethod))
+            {
+                return BadRequest("InValid Payment Method");
+            }
+
+            try
+            {
+                var payment = await _paymentRepository.CreatePaymentAsync(dto);
+                return Ok(new
+                {
+                    payment.PatientId,
+                    payment.DoctorId,
+                    payment.PaymentId,
+                    payment.TotalAmount,
+                    payment.PaidAmount,
+                    PendingAmount = payment.TotalAmount - payment.PaidAmount,
+                });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [HttpGet("Appointment/{appointmentId}")]
+        public async Task<IActionResult> GetByAppointment(int appointmentId)
+        {
+            var payments = await _paymentRepository.GetPaymentsByAppointmentAsync(appointmentId);
+            return Ok(payments);
+        }
+
+        [HttpGet("Payments")]
+        public async Task<IActionResult> GetAllPayments()
+        {
+            var payments = await _paymentRepository.GetAllPaymentsAsync();
+            return Ok(payments);
+        }
+
+
 
         // Earnings by Day
         [HttpGet("earnings/day")]

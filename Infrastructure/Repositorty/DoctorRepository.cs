@@ -16,7 +16,7 @@ namespace Infrastructure.Repositorty
         }
 
         public async Task<IEnumerable<object>> GetAllDoctorsAsync() => await _context.Users
-            .Where(d => d.Role == UserRole.Doctor)
+            .Where(d => d.Role == UserRole.Doctor && d.IsApprovedByAdmin == AdminApproval.Approved)
             .Select(d => new
             {
                 d.UserId,
@@ -33,7 +33,11 @@ namespace Infrastructure.Repositorty
                 d.EmergencyContactRelationship,
                 d.ProfileImage,
                 d.ProfileImageFileName,
-                d.ProfileImageMimeType
+                d.ProfileImageMimeType,
+                d.Shift,                    // ← ADD THIS LINE
+                d.ShiftStartTime,           // ← ADD THIS LINE
+                d.ShiftEndTime
+
             }).ToListAsync();
 
         public async Task<IEnumerable<object>> GetDoctorByIdAsync(int id)
@@ -55,7 +59,10 @@ namespace Infrastructure.Repositorty
                 d.EmergencyContactRelationship,
                 d.ProfileImage,
                 d.ProfileImageFileName,
-                d.ProfileImageMimeType
+                d.ProfileImageMimeType,
+                d.Shift,                    // ← ADD THIS LINE
+                d.ShiftStartTime,           // ← ADD THIS LINE
+                d.ShiftEndTime
             }).ToListAsync();
         }
 
@@ -77,7 +84,10 @@ namespace Infrastructure.Repositorty
                     d.EmergencyContactRelationship,
                     d.ProfileImage,
                     d.ProfileImageFileName,
-                    d.ProfileImageMimeType
+                    d.ProfileImageMimeType,
+                    d.Shift,                    // ← ADD THIS LINE
+                    d.ShiftStartTime,           // ← ADD THIS LINE
+                    d.ShiftEndTime
                 }).ToListAsync();
         }
 
@@ -96,26 +106,49 @@ namespace Infrastructure.Repositorty
                     d.Consultant_fees,
                     d.Active_Status,
                     d.EmergencyContactRelationship,
-                    d.PhoneNumber
+                    d.PhoneNumber,
+                    d.Shift,                    // ← ADD THIS LINE
+                    d.ShiftStartTime,           // ← ADD THIS LINE
+                    d.ShiftEndTime
                 }).ToListAsync();
 
 
         }
 
-        public async Task<Users> UpdateActiveStatus(string email, Status Status)
+        public async Task<Users> UpdateActiveStatus(string email, Status status)
         {
-            var EmployeeDetails = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && !u.Role.Equals(UserRole.Patient));
-            if (EmployeeDetails == null)
+            var employeeDetails = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email && !u.Role.Equals(UserRole.Patient));
+
+            if (employeeDetails == null)
                 return null;
-            EmployeeDetails.Active_Status = Status;
-            var curtime = TimeOnly.FromDateTime(DateTime.Now);
-            if (EmployeeDetails.Active_Status.Equals(Status.Online) && EmployeeDetails.ShiftEndTime < curtime)
+
+            var currentTime = TimeOnly.FromDateTime(DateTime.Now);
+            var start = employeeDetails.ShiftStartTime;
+            var end = employeeDetails.ShiftEndTime;
+
+            bool isWithinShift;
+
+            if (start < end)
             {
-                EmployeeDetails.Active_Status = Status.Offline;
+                // Normal shift (e.g., 09:00 to 17:00)
+                isWithinShift = currentTime >= start && currentTime <= end;
             }
+            else
+            {
+                // Overnight shift (e.g., 21:00 to 05:00)
+                isWithinShift = currentTime >= start || currentTime <= end;
+            }
+
+            employeeDetails.Active_Status = (status == Status.Online && isWithinShift)
+                ? Status.Online
+                : Status.Offline;
+
             await _context.SaveChangesAsync();
-            return EmployeeDetails;
+            return employeeDetails;
         }
+
+
         public async Task<int> GetDoctorCountAsync()
         {
             return await _context.Users.CountAsync(d => d.Role == UserRole.Doctor);

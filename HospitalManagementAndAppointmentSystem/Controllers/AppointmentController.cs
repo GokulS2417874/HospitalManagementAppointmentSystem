@@ -104,11 +104,11 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
 
             return Ok(appointments);
         }
-        [Authorize(Roles = "Doctor,Admin")]
+        [Authorize(Roles = "Doctor,Admin,Patient")]
         [HttpGet("GetPatientMedicalHistoriesById")]
-        public async Task<IActionResult> GetMedicalHistory(int id)
+        public async Task<IActionResult> GetMedicalHistory(int appointmentId, int patientId)
         {
-            var result = await _repo.GetPatientMedicalHistoryAsync(id);
+            var result = await _repo.GetPatientMedicalHistoryAsync(appointmentId, patientId);
 
             if (result == null)
                 return NotFound("No Medical History");

@@ -4,6 +4,7 @@ using Infrastructure.Interface;
 using Infrastructure.Repositorty;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -37,6 +38,11 @@ namespace HospitalManagementAndAppointmentSystem
             builder.Services.AddScoped<IHelpDeskRepository, HelpDeskRepository>();
             builder.Services.AddScoped<IPayementRepository, PaymentRepository>();
             builder.Services.AddScoped<IPrescriptionRepository, PrescriptionRepository>();
+
+            builder.Services.Configure<JsonOptions>(options =>
+            {
+                options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
             // ✅ FIXED: Single CORS Configuration with correct port
             builder.Services.AddCors(options =>
@@ -105,10 +111,22 @@ namespace HospitalManagementAndAppointmentSystem
             });
 
             // Add services to the container.
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:63515", "http://localhost:4200", "http://localhost:65160")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
 
             var app = builder.Build();
 
@@ -119,13 +137,15 @@ namespace HospitalManagementAndAppointmentSystem
                 app.UseSwaggerUI();
             }
 
-            // ✅ Enable CORS (IMPORTANT: Must be before UseAuthentication)
-            app.UseCors();
+            app.UseCors("AllowAngularApp");
 
             app.UseHttpsRedirection();
 
+
+
             app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.MapControllers();
 

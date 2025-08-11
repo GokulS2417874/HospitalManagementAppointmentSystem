@@ -81,12 +81,11 @@
         }
         public enum TabletScheduleTime
         {
-            Morning,
-            Afternoon,
-            Evening,
-            Night,
-            AfterMeal,
-            BeforeMeal
+            Morning = 0,
+            Afternoon = 1,
+            Evening= 2,
+            Night = 4,
+            
         }
         public enum MedicineType
         {

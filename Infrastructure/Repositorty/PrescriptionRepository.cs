@@ -65,40 +65,39 @@ namespace Infrastructure.Repositorty
             return (true, "Prescription deleted successfully.");
         }
 
-        public async Task<List<Prescription>> GetPrescriptionsByPatientAsync(int patientId)
+        public async Task<List<Prescription>> GetPrescriptionsByPatientAsync(int AppointmentId)
         {
             return await _context.Prescriptions
-            .Where(p => p.PatientId == patientId)
-            .Include(p => p.Patient)
-            .ToListAsync();
+                .Where(p => p.AppointmentId == AppointmentId)
+                .Include(p => p.Patient)
+                .Include(p => p.Medicines)
+                .AsNoTracking()  // Add this to prevent circular reference tracking
+                .ToListAsync();
         }
 
-        public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id)
+        public async Task<List<PrescriptionDto>> GetPrescriptionByIdAsync(int AppointmentId)
         {
-            var pres = await _context.Prescriptions.Include(p => p.Medicines).FirstOrDefaultAsync(p => p.PrescriptionId == id);
-            if (pres == null)
-                return null;
+            var prescriptions = await _context.Prescriptions
+                .Where(p => p.AppointmentId == AppointmentId)
+                .Include(p => p.Patient)
+                .Include(p => p.Medicines)
+                .AsNoTracking()
+                .ToListAsync();
 
-            //var meds = System.Enum.GetValues(typeof(MedicineType))
-            //    .Cast<MedicineType>()
-            //    .Where(flag => flag != MedicineType.none && pres.Medication.HasFlag(flag))
-            //    .Select(m => m)
-            //    .ToList();
-
-            return new PrescriptionDto
+            return prescriptions.Select(p => new PrescriptionDto
             {
-                AppointmentId = pres.AppointmentId,
-                DoctorId = pres.DoctorId,
-                PatientId = pres.PatientId,
-                Instructions = pres.Instructions,
-                Medicines = pres.Medicines.Select(m => new PrescriptionMedicineDto
+                AppointmentId = p.AppointmentId,
+                PatientId = p.PatientId,
+                DoctorId = p.DoctorId,
+                Instructions = p.Instructions,
+                Medicines = p.Medicines.Select(m => new PrescriptionMedicineDto
                 {
+                    PrescriptionId = m.PrescriptionId,
                     MedicineType = m.MedicineType,
-                    Dosages = m.Dosages, 
+                    Dosages = m.Dosages,
                     ScheduleTime = m.ScheduleTime
-                }).ToList(),
-
-            };
+                }).ToList()
+            }).ToList();
         }
     }
 }

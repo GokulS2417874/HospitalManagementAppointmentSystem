@@ -16,7 +16,7 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
         {
             _patientRepo = patientRepo;
         }
-        [Authorize(Roles = "Admin,Doctor,HelpDesk")]
+        
         [HttpGet("GetAllPatient")]
 
         public async Task<IActionResult> GetAllPatient()

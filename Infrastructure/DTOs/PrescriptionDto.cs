@@ -14,6 +14,7 @@ namespace Infrastructure.DTOs
 
     public class PrescriptionMedicineDto
     {
+        public int PrescriptionId { get; set; }
         public string MedicineType { get; set; }
         public string Dosages { get; set; }
         public string ScheduleTime { get; set; }

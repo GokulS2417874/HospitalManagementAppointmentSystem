@@ -40,12 +40,6 @@ namespace Domain.Models
         public BookedBy? BookedBy { get; set; }
         public int? HelpDeskId { get; set; }
         // Only set if BookedBy is HelpDesk
-
-
-
-
-
-
         public TimeOnly? ShiftStartTime
         {
             get

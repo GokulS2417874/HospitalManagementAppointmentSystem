@@ -163,23 +163,38 @@ namespace Infrastructure.Repositorty
             return appointment;
         }
         public async Task<string> UpdateAppointmentStatusAsync(int id, DoctorAppointmentUpdateDto dto)
+
         {
-            var appointment = await _context.Appointments.FirstOrDefaultAsync(appointment=>appointment.AppointmentId==id);
+
+            var appointment = await _context.Appointments.FirstOrDefaultAsync(appointment => appointment.AppointmentId == id);
 
             if (appointment == null)
+
                 return "Patient not found.";
 
-            appointment.AppointmentStartTime = null;
-            appointment.AppointmentEndTime = null;
 
             var now = TimeOnly.FromDateTime(DateTime.Now);
-            appointment.AppointmentStatus = dto.IsAttended && appointment.AppointmentEndTime > now
-                ? AppointmentStatus.Completed
-                :AppointmentStatus.NotAttended ;
+
+            appointment.AppointmentStatus = dto.IsAttended
+
+                         ? AppointmentStatus.Completed
+
+                    : (appointment.AppointmentEndTime.HasValue && appointment.AppointmentEndTime.Value > now
+
+                        ? AppointmentStatus.NotAttended
+
+                        : AppointmentStatus.Scheduled);
+
+            appointment.AppointmentStartTime = null;
+
+            appointment.AppointmentEndTime = null;
 
             await _context.SaveChangesAsync();
+
             return "Appointment status updated.";
+
         }
+
 
         public async Task<Appointment> RetrieveAppointmentDetails(string email)
         {
@@ -199,11 +214,14 @@ namespace Infrastructure.Repositorty
 
         }
 
-        public async Task<(byte[] FilePath, string MimeType, string FileName)?> GetPatientMedicalHistoryAsync(int patientId)
+        public async Task<(byte[] FilePath, string MimeType, string FileName)?> GetPatientMedicalHistoryAsync(int appointmentId, int patientId)
         {
             var appointment = await _context.Appointments
-            .Where(a => a.PatientId == patientId).
-            OrderByDescending(a=>a.AppointmentDate)
+
+
+        .Where(a => a.PatientId == patientId && a.AppointmentId == appointmentId)
+        .OrderByDescending(a => a.AppointmentDate)
+
             .Select(a => new
             {
                 a.FilePath,
@@ -218,6 +236,7 @@ namespace Infrastructure.Repositorty
             return (appointment.FilePath, appointment.MimeType ?? "application/pdf", appointment.FileName ?? "MedicalHistory.pdf");
 
         }
+
 
         public async Task<List<Appointment>> GetAppointmentsForDoctorAsync(string email)
         {

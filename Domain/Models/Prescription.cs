@@ -11,7 +11,7 @@ namespace Domain.Models
         public Users Patient { get; set; }
         public int DoctorId { get; set; }
         public Users Doctor { get; set; }
-        public string Instructions { get; set; }
+        public string? Instructions { get; set; }
         public DateTime PrescribedOn { get; set; } = DateTime.Now;
         public ICollection<PrescriptionMedicine> Medicines { get; set; }
     }

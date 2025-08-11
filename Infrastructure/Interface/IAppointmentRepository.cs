@@ -13,7 +13,7 @@ namespace Infrastructure.Interface
         Task<Appointment?> CancelAppointmentAsync(string email);
         Task<string> UpdateAppointmentStatusAsync(int AppointmentId, DoctorAppointmentUpdateDto dto);
         Task<Appointment> RetrieveAppointmentDetails(string Email);
-        Task<(byte[] FilePath, string MimeType, string FileName)?> GetPatientMedicalHistoryAsync(int patientId);
+        Task<(byte[] FilePath, string MimeType, string FileName)?> GetPatientMedicalHistoryAsync(int appointmentId, int patientId);
         Task<List<Appointment>> GetAppointmentsByPatientIdAsync(int doctorId);
         Task<List<Appointment>> GetTodayAppointmentsForDoctorAsync(int doctorId);
     }

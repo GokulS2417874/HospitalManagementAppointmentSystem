@@ -43,10 +43,10 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return NotFound(result.Message);
         }
         [Authorize(Roles = "Doctor,Patient,Admin")]
-        [HttpGet("patientPrescription/{patientId}")]
-        public async Task<IActionResult> GetPrescriptionsByPatient([FromRoute] int patientId)
+        [HttpGet("patientPrescription/{appointmentId}")]
+        public async Task<IActionResult> GetPrescriptionsByPatient([FromRoute] int appointmentId)
         {
-            var prescriptions = await _repository.GetPrescriptionsByPatientAsync(patientId);
+            var prescriptions = await _repository.GetPrescriptionsByPatientAsync(appointmentId);
             return Ok(prescriptions);
         }
         [Authorize(Roles = "Doctor,Patient,Admin")]
@@ -58,7 +58,15 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
                 return NotFound("Prescription not found.");
             return Ok(prescription);
         }
-
+        //[Authorize(Roles = "Doctor,Patient,Admin")]
+        //[HttpGet("GetPrescriptionbyID/{id}")]
+        //public async Task<IActionResult> GetPrescriptionMedicationById([FromRoute] int Prescriptionid)
+        //{
+        //    var prescription = await _repository.GetPrescriptionByIdAsync(Prescriptionid);
+        //    if (prescription == null)
+        //        return NotFound("Prescription not found.");
+        //    return Ok(prescription);
+        //}
         //[HttpGet]
 
         //public async Task<PrescriptionDto?> GetPrescriptionByIdAsync(int PerscriptionId)

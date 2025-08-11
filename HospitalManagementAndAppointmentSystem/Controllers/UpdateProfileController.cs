@@ -30,6 +30,17 @@ namespace HospitalManagementAndAppointmentSystem.Controllers
             return Ok(users);
         }
 
+        [HttpGet("GetUserById/{id}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _userRepository.FindByIdAsync(id); // Ensure this method exists in your repository
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(user);
+        }
+
         [HttpPut("UpdateProfile")]
         public async Task<IActionResult> UpdateProfile([FromForm] GenericRegistrationForm dto)
         {

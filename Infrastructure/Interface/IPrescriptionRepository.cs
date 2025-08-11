@@ -13,7 +13,8 @@ namespace Infrastructure.Interface
         Task<(bool Success, string Message)> AddPrescriptionAsync(PrescriptionDto dto);
         Task<(bool Success, string Message)> DeletePrescriptionAsync(int id);
         Task<List<Prescription>> GetPrescriptionsByPatientAsync(int patientId);
-        Task<PrescriptionDto?> GetPrescriptionByIdAsync(int id);
+        Task <List<PrescriptionDto?>> GetPrescriptionByIdAsync(int PrescriptionId);
+        //Task <List<PrescriptionMedicineDto?>> GetPrescriptionMedicationByIdAsync(int PrescriptionId);
 
     }
 }
